@@ -103,7 +103,15 @@
             color: #7f8c8d;
             font-size: 0.9rem;
             margin-top: 20px;
+            
         }
+        .alert {
+    padding: 10px;
+    border: 1px solid red; /* You can adjust the border color */
+    background-color: #f8d7da; /* Light red background */
+    border-radius: 5px;
+               }  
+
     </style>
 </head>
 <body>
@@ -112,26 +120,36 @@
     <div class="right-side">
         <div class="header">School Information Management System</div>
 
-        <div class="form-card">
-            <div class="form-group">
-                <label for="username"><b>Username</b></label>
-                <input type="text" id="username" name="username" placeholder="Enter your username">
-            </div>
-            <div class="form-group">
-                <label for="password"><b>Password</b></label>
-                <input type="password" id="password" name="password" placeholder="Enter your password">
-            </div>
+          <!-- Error Message Section -->
+    @if(session('error'))
+    <div class="alert" style="color: red; text-align: center; margin-bottom: 20px;">
+        {{ session('error') }}
+    </div>
+@endif
 
-            <div class="btn-container">
-                <a href="{{ route('login') }}" class="btn btn-login">
-                    <i class="fas fa-sign-in-alt"></i> Login
-                </a>
-                @if (Route::has('register'))
-                    <a href="{{ route('register') }}" class="btn btn-register">
-                        <i class="fas fa-user-plus"></i> Register
-                    </a>
-                @endif
-            </div>
+        <div class="form-card">
+            <form method="POST" action="/login">
+                @csrf
+                <div class="form-group">
+                    <label for="email"><b>Email</b></label>
+                    <input type="text" id="email" name="email" placeholder="Enter your email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password"><b>Password</b></label>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                </div>
+        
+                <div class="btn-container">
+                    <button type="submit" class="btn btn-login">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                    @if (Route::has('register'))
+                        <a href="{{ route('register') }}" class="btn btn-register">
+                            <i class="fas fa-user-plus"></i> Register
+                        </a>
+                    @endif
+                </div>
+            </form>
         </div>
 
         <div class="feature-section">

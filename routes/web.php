@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Auth\LoginController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,7 +18,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+Auth::routes(['login' => false]);
+
+//handle login
+Route::post('/login', [LoginController::class, 'login'])->name('login');
+
+
 //user route
 Route::middleware(['auth','user-role:student'])->group(function(){
 
