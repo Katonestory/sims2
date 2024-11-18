@@ -6,6 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
+        <link rel="icon" href="{{ asset('images/graduatehat.png') }}" type="image/png">
         <title>SIMS</title>
         <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
     <link href="{{asset('css/styles.css')}}" rel="stylesheet" />
@@ -23,10 +24,13 @@
 
                 <main>
                     <div class="container-fluid px-4">
-                         @yield('content')
+                        <h1 class="mt-4">@yield('page-title', 'Dashboard')</h1>
+                        <ol class="breadcrumb mb-4">
+                            <li class="breadcrumb-item active">@yield('breadcrumb', 'Home')</li>
+                        </ol>
+                        @yield('content') <!-- Custom content for each role -->
                     </div>
                 </main>
-
 
                 @include('layouts.partials.footer')
 

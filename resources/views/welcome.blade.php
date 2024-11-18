@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SCHOOL INFORMATION MANAGEMENT SYSTEM</title>
+    <link rel="icon" href="{{ asset('images/graduatehat.png') }}" type="image/png">
 
     <!-- Styles -->
     <style>
@@ -103,14 +104,14 @@
             color: #7f8c8d;
             font-size: 0.9rem;
             margin-top: 20px;
-            
+
         }
         .alert {
     padding: 10px;
     border: 1px solid red; /* You can adjust the border color */
     background-color: #f8d7da; /* Light red background */
     border-radius: 5px;
-               }  
+               }
 
     </style>
 </head>
@@ -138,7 +139,7 @@
                     <label for="password"><b>Password</b></label>
                     <input type="password" id="password" name="password" placeholder="Enter your password" required>
                 </div>
-        
+
                 <div class="btn-container">
                     <button type="submit" class="btn btn-login">
                         <i class="fas fa-sign-in-alt"></i> Login
