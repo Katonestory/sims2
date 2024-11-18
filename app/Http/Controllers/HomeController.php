@@ -23,15 +23,15 @@ class HomeController extends Controller
      */
     public function studentHome()
     {
-        return view('home',["msg"=>"i am a student role"]);
+        return view('student.dashboard');
     }
     public function teacherHome()
     {
-        return view('home',["msg"=>"i am a teacher role"]);
+        return view('teacher.dashboard');
     }
     public function adminHome()
     {
-        return view('home',["msg"=>"i am a admin role"]);
+        return view('admin.dashboard');
     }
 }
  

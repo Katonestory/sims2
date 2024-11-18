@@ -15,12 +15,17 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-        $this->middleware('auth')->only('logout');
+        $this->middleware(function ($request,$next){
+            if(auth()->check()){
+                return redirect()->route('home');
+            }
+            return $next($request);
+        })->only('showLoginForm');
     }
 
     public function username()
     {
-        return 'email'; ;
+        return 'email'; 
     }
 
     public function login(Request $request)
@@ -28,7 +33,7 @@ class LoginController extends Controller
     $input = $request->all();
     $this->validate($request, [
         'email' => 'required|email', // Update validation,
-        'password' => 'required'
+        'password' => 'required|string',  
     ]);
 
     if (auth()->attempt(['email' => $input['email'], 'password' => $input['password']])) {
@@ -42,6 +47,7 @@ class LoginController extends Controller
     } else {
         return redirect('/')->with('error', 'Incorrect username or password'); // Redirect to the welcome page
     }
+    
 }
 
 }

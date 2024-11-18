@@ -1,0 +1,60 @@
+/* Wrapper ensures proper layout */
+#wrapper {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    flex-direction: column; /* Default to column layout */
+}
+
+/* Navbar at the top */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    width: 100%;
+}
+
+/* Sidebar styles */
+#sidebar {
+    background-color: #343a40;
+    color: #fff;
+    height: calc(100vh - 56px); /* Adjust for the navbar height */
+    width: 250px;
+    flex-shrink: 0;
+    overflow-y: auto;
+}
+
+#sidebar .components {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#sidebar ul li a {
+    color: #ddd;
+    text-decoration: none;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+}
+
+#sidebar ul li a:hover {
+    background-color: #495057;
+    color: #fff;
+}
+
+/* Content area */
+#content {
+    flex-grow: 1;
+    padding: 20px;
+    margin-left: 250px; /* Adjust to match the sidebar width */
+}
+
+/* Sidebar collapsed state */
+#sidebar.collapsed {
+    width: 80px;
+}
+
+#sidebar.collapsed ~ #content {
+    margin-left: 80px;
+}
