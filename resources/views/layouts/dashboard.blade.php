@@ -20,15 +20,13 @@
             <div id="layoutSidenav_nav">
                 @include('layouts.partials.sidebar')
             </div>
+
             <div id="layoutSidenav_content">
 
                 <main>
                     <div class="container-fluid px-4">
-                        <h1 class="mt-4">@yield('page-title', 'Dashboard')</h1>
-                        <ol class="breadcrumb mb-4">
-                            <li class="breadcrumb-item active">@yield('breadcrumb', 'Home')</li>
-                        </ol>
-                        @yield('content') <!-- Custom content for each role -->
+
+                        @yield('content')
                     </div>
                 </main>
 

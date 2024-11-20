@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SCHOOL INFORMATION MANAGEMENT SYSTEM</title>
     <link rel="icon" href="{{ asset('images/graduatehat.png') }}" type="image/png">
-
-    <!-- Styles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+   <!-- Styles -->
     <style>
         body {
             margin: 0;
@@ -51,9 +51,10 @@
         .form-group {
             margin-bottom: 20px;
             font-weight: bold;
+
         }
         label {
-            font-size: 0.9rem;
+            font-size: 1.2rem;
             color: #2c3e50;
         }
         input[type="text"], input[type="password"] {
@@ -93,12 +94,7 @@
         .btn-login:hover {
             background-color: #2980b9;
         }
-        .btn-register {
-            background-color: #1abc9c;
-        }
-        .btn-register:hover {
-            background-color: #16a085;
-        }
+
         .feature-section {
             text-align: center;
             color: #7f8c8d;
@@ -132,23 +128,20 @@
             <form method="POST" action="/login">
                 @csrf
                 <div class="form-group">
-                    <label for="email"><b>Email</b></label>
+                    <label for="email"><b>E-mail</b></label>
                     <input type="text" id="email" name="email" placeholder="Enter your email" required>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="position: relative;">
                     <label for="password"><b>Password</b></label>
-                    <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required style="padding-right: 10px;">
+                    <i class="fas fa-eye" id="togglePassword" style="position: absolute; right: 10px; top: 55%;  cursor: pointer;"></i>
                 </div>
 
                 <div class="btn-container">
                     <button type="submit" class="btn btn-login">
                         <i class="fas fa-sign-in-alt"></i> Login
                     </button>
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}" class="btn btn-register">
-                            <i class="fas fa-user-plus"></i> Register
-                        </a>
-                    @endif
+
                 </div>
             </form>
         </div>
@@ -157,5 +150,22 @@
             Access your student information securely and conveniently.
         </div>
     </div>
+
+    <script>
+          document.addEventListener('DOMContentLoaded', function () {
+        const togglePassword = document.querySelector('#togglePassword');
+        const passwordField = document.querySelector('#password');
+
+        togglePassword.addEventListener('click', function () {
+            // Toggle the type attribute
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+
+            // Toggle the icon
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+    });
+    </script>
 </body>
 </html>
