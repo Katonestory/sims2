@@ -82,6 +82,29 @@
                     <div class="sb-nav-link-icon"><i class="fas fa-key"></i></div>
                     <span class="nav-text">Change Password</span>
                 </a>
+                <!-- Sidebar for Admin -->
+            @elseif (Auth::user()->role == 'bursar')
+            <div class="sb-sidenav-menu-heading">Bursar Menu</div>
+            <a class="nav-link" href="{{ route('bursar.fee-structure-management') }}">
+                <div class="sb-nav-link-icon"><i class="fas fa-money-bill-alt"></i></div>
+                <span class="nav-text">Fee Structure Management</span>
+            </a>
+            <a class="nav-link" href="{{ route('bursar.view-and-manage-payments') }}">
+                <div class="sb-nav-link-icon"><i class="fas fa-wallet"></i></div>
+                <span class="nav-text">View and Manage Payments</span>
+            </a>
+            <a class="nav-link" href="{{ route('bursar.generateInvoice') }}">
+                <div class="sb-nav-link-icon"><i class="fas fa-receipt"></i></div>
+                <span class="nav-text">Generate Invoice</span>
+            </a>
+            <a class="nav-link" href="{{ route('bursar.financialReport') }}">
+                <div class="sb-nav-link-icon"><i class="fas fa-chart-line"></i></div>
+                <span class="nav-text">Financial Report</span>
+            </a>
+            <a class="nav-link" href="{{ route('bursar.changePassword') }}">
+                <div class="sb-nav-link-icon"><i class="fas fa-key"></i></div>
+                <span class="nav-text">Change Password</span>
+            </a>
             @endif
         </div>
 

@@ -25,7 +25,7 @@ class LoginController extends Controller
 
     public function username()
     {
-        return 'email'; 
+        return 'email';
     }
 
     public function login(Request $request)
@@ -33,7 +33,7 @@ class LoginController extends Controller
     $input = $request->all();
     $this->validate($request, [
         'email' => 'required|email', // Update validation,
-        'password' => 'required|string',  
+        'password' => 'required|string',
     ]);
 
     if (auth()->attempt(['email' => $input['email'], 'password' => $input['password']])) {
@@ -41,13 +41,17 @@ class LoginController extends Controller
             return redirect()->route('home.admin');
         } elseif (auth()->user()->role == 'teacher') {
             return redirect()->route('home.teacher');
-        } else {
+        }
+        elseif (auth()->user()->role == 'bursar') {
+            return redirect()->route('home.bursar');
+        }
+        else {
             return redirect()->route('home');
         }
     } else {
         return redirect('/')->with('error', 'Incorrect username or password'); // Redirect to the welcome page
     }
-    
+
 }
 
 }

@@ -13,7 +13,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        
+
     }
 
     /**
@@ -33,5 +33,9 @@ class HomeController extends Controller
     {
         return view('admin.dashboard');
     }
+
+    public function bursarHome()
+    {
+        return view('bursar.dashboard');
+    }
 }
- 

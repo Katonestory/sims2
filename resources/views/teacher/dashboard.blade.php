@@ -5,7 +5,8 @@
    <div style="height: 3cm; background-color: #f8f9fa; display: flex; flex-direction: column; justify-content: center; padding: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); margin-bottom: 20px; margin-top: 5px; ">
     <div style="display: flex; justify-content: space-between; font-size: 16px; font-weight: bold;">
         <span>Logged in as: <span style="color: blue;"> {{ auth()->user()->name }}</span></span>
-        <span>Academic Year: 2024/2025</span>
+        <span>Academic Year: <span style="color: blue;">{{ now()->year }}</span></span>
+
         <span style="color: blue;">{{ \Carbon\Carbon::now()->format('l, jS F Y')  }}</span>
     </div>
     <div style="display: flex; justify-content: space-between; font-size: 14px;">

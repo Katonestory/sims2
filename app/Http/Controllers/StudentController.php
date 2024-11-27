@@ -66,4 +66,14 @@ class StudentController extends Controller
         return redirect()->route('student.change-password')
                          ->with('status', 'Your password has been updated successfully.');
     }
+    public function showDashboard()
+    {
+        // Fetch active announcements
+        $announcements = Announcement::whereDate('startDate', '<=', now())
+            ->whereDate('endDate', '>=', now())
+            ->get();
+
+        // Pass announcements to the student dashboard view
+        return view('student.dashboard', compact('announcements'));
+    }
 }

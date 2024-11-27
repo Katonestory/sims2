@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\BursarController;
 
 /*
 |--------------------------------------------------------------------------
@@ -71,13 +72,43 @@ Route::prefix('teacher')->middleware('auth')->group(function () {
 
 
 Route::prefix('admin')->middleware('auth')->group(function () {
-    Route::get('/upload-announcement', [AdminController::class, 'uploadAnnouncement'])->name('admin.upload-announcement');
+    // Admin dashboard route
+    Route::get('/dashboard', [AdminController::class, 'showDashboard'])->name('admin.dashboard');
+
+    // Announcement routes
+    Route::get('/upload-announcement', [AdminController::class, 'showUploadAnnouncementForm'])->name('admin.upload-announcement-form');
+    Route::post('/upload-announcement', [AdminController::class, 'uploadAnnouncement'])->name('admin.upload-announcement');
+
+    // Registration routes for classes, teachers, students, subjects, and exams
     Route::get('/register-classes', [AdminController::class, 'registerClasses'])->name('admin.register-classes');
     Route::get('/register-teachers', [AdminController::class, 'registerTeachers'])->name('admin.register-teachers');
     Route::get('/register-students', [AdminController::class, 'registerStudents'])->name('admin.register-students');
     Route::get('/register-subjects', [AdminController::class, 'registerSubjects'])->name('admin.register-subjects');
     Route::get('/register-exams', [AdminController::class, 'registerExams'])->name('admin.register-exams');
-    Route::get('/change-password', [AdminController::class, 'changePassword'])->name('admin.change-password');
-    Route::post('/admin/change-password', [AdminController::class, 'changePassword'])->name('admin.change-password');
 
+    // Admin password change route
+    Route::get('/change-password', [AdminController::class, 'changePassword'])->name('admin.change-password');
 });
+
+
+//bursar routes
+Route::middleware(['auth','user-role:bursar'])->group(function(){
+
+    Route::get("/bursar/home",[HomeController::class, 'bursarHome'])->name('home.bursar');
+});
+
+
+Route::prefix('bursar')->middleware('auth')->group(function () {
+    Route::get('/bursar/fee-structure-management', [BursarController::class, 'feeStructureManagement'])->name('bursar.fee-structure-management');
+    Route::get('/financial-report', [BursarController::class, 'financialReport'])->name('bursar.financialReport');
+    Route::get('/generate-invoice', [BursarController::class, 'generateInvoice'])->name('bursar.generateInvoice');
+    Route::get('/bursar/view-and-manage-payments', [BursarController::class, 'viewAndManagePayments'])->name('bursar.view-and-manage-payments');
+    Route::get('/change-password', [BursarController::class, 'changePassword'])->name('bursar.changePassword');
+    Route::post('/bursar/update-password', [BursarController::class, 'updatePassword'])->name('bursar.updatePassword');
+});
+
+
+
+
+
+?>

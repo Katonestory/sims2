@@ -44,4 +44,14 @@ class TeacherController extends Controller
 
         return back()->with('status', 'Password updated successfully!');
     }
+    public function showDashboard()
+    {
+        // Fetch active announcements
+        $announcements = Announcement::whereDate('startDate', '<=', now())
+            ->whereDate('endDate', '>=', now())
+            ->get();
+
+        // Pass announcements to the teacher dashboard view
+        return view('teacher.dashboard', compact('announcements'));
+    }
 }

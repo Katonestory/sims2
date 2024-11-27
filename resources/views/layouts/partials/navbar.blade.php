@@ -21,7 +21,7 @@
         <li class="nav-item">
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
                 @csrf
-                <button type="submit" class="nav-link" style="background: none; border: none; padding: 0;">
+                <button type="submit" class="nav-link" style="background: none; border: none; padding: 0; cursor: pointer;">
                     <i class="fas fa-power-off" style="margin-right: 8px;"></i> Logout
                 </button>
             </form>

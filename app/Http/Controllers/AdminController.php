@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Announcement;
 
 class AdminController extends Controller
 {
      // Display the Upload Announcement page
-     public function uploadAnnouncement()
+     public function showUploadAnnouncementForm()
      {
          return view('admin.upload-announcement');
      }
@@ -47,4 +48,38 @@ class AdminController extends Controller
      {
          return view('admin.change-password');
      }
+     public function uploadAnnouncement(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255|min:10',
+            'message' => 'required|string|min:40',
+            'startDate' => 'required|date',
+            'endDate' => 'nullable|date|after_or_equal:startDate',
+        ]);
+
+        Announcement::create([
+            'title' => $request->title,
+            'message' => $request->message,
+            'created_by' => auth()->id(),
+            'startDate' => $request->startDate,
+            'endDate' => $request->endDate,
+        ]);
+
+        return redirect()->route('admin.upload-announcement-form')
+    ->with('success', 'Announcement posted successfully!');
+    }
+
+
+    public function showDashboard()
+    {
+        // Fetch active announcements for the admin
+        $announcements = Announcement::whereDate('startDate', '<=', now())
+            ->whereDate('endDate', '>=', now())
+            ->get();
+
+            dd($announcements);
+
+        // Pass announcements to the admin dashboard view
+        return view('admin.dashboard', compact('announcements'));
+    }
 }
