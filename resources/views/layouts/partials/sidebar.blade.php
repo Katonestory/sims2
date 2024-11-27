@@ -2,7 +2,8 @@
     <div class="sb-sidenav-menu">
         <div class="nav"  style="font-size: 1.2rem;">
             <a class="nav-link"
-            href="{{ Auth::user()->role == 'student' ? route('home') : (Auth::user()->role == 'teacher' ? route('home.teacher') : route('home.admin')) }}">
+            href="{{ Auth::user()->role == 'student' ? route('home') : (Auth::user()->role == 'teacher' ? route('home.teacher') : (Auth::user()->role == 'admin' ? route('home.admin') : route('home.bursar'))) }}"
+>
              <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
              <span class="nav-text">Dashboard</span>
          </a>
@@ -14,10 +15,7 @@
                     <div class="sb-nav-link-icon"><i class="fas fa-book"></i></div>
                     <span class="nav-text">My Subjects</span>
                 </a>
-                <a class="nav-link" href="{{ route('student.materials') }}">
-                    <div class="sb-nav-link-icon"><i class="fas fa-tasks"></i></div>
-                    <span class="nav-text">Materials</span>
-                </a>
+
                 <a class="nav-link" href="{{ route('student.assignments') }}">
                     <div class="sb-nav-link-icon"><i class="fas fa-tasks"></i></div>
                     <span class="nav-text">Assignments</span>
@@ -34,10 +32,7 @@
             <!-- Sidebar for Teacher -->
             @elseif (Auth::user()->role == 'teacher')
                 <div class="sb-sidenav-menu-heading">Teacher Menu</div>
-                <a class="nav-link" href="{{ route('teacher.upload-materials') }}">
-                    <div class="sb-nav-link-icon"><i class="fas fa-upload"></i></div>
-                    <span class="nav-text">Upload Materials</span>
-                </a>
+
                 <a class="nav-link" href="{{ route('teacher.upload-assignments') }}">
                     <div class="sb-nav-link-icon"><i class="fas fa-pencil-alt"></i></div>
                    <span class="nav-text">Upload Assignments</span>

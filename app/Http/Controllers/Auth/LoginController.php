@@ -39,14 +39,15 @@ class LoginController extends Controller
     if (auth()->attempt(['email' => $input['email'], 'password' => $input['password']])) {
         if (auth()->user()->role == 'admin') {
             return redirect()->route('home.admin');
-        } elseif (auth()->user()->role == 'teacher') {
+        }
+        elseif (auth()->user()->role == 'teacher') {
             return redirect()->route('home.teacher');
         }
         elseif (auth()->user()->role == 'bursar') {
             return redirect()->route('home.bursar');
         }
         else {
-            return redirect()->route('home');
+            return redirect()->route('home.student');
         }
     } else {
         return redirect('/')->with('error', 'Incorrect username or password'); // Redirect to the welcome page

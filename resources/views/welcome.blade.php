@@ -138,7 +138,7 @@
                 </div>
 
                 <div class="btn-container">
-                    <button type="submit" class="btn btn-login">
+                    <button type="submit" class="btn btn-login" style="cursor: pointer;">
                         <i class="fas fa-sign-in-alt"></i> Login
                     </button>
 

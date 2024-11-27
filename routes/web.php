@@ -32,7 +32,7 @@ Route::post('/login', [LoginController::class, 'login'])->name('login');
 //user route
 Route::middleware(['auth','user-role:student'])->group(function(){
 
-    Route::get("/home",[HomeController::class, 'studentHome'])->name('home');
+    Route::get('/student/home', [HomeController::class, 'studentHome'])->name('home.student');
 });
 
 //teacher  route
@@ -61,7 +61,7 @@ Route::post('/change-password', [StudentController::class, 'updatePassword'])->n
 
 
 Route::prefix('teacher')->middleware('auth')->group(function () {
-    Route::get('/upload-materials', [TeacherController::class, 'uploadMaterials'])->name('teacher.upload-materials');
+
     Route::get('/upload-assignments', [TeacherController::class, 'uploadAssignments'])->name('teacher.upload-assignments');
     Route::get('/upload-results', [TeacherController::class, 'uploadResults'])->name('teacher.upload-results');
     Route::post('/upload-assignments', [TeacherController::class, 'storeAssignments'])->name('teacher.store-assignments');
@@ -107,7 +107,26 @@ Route::prefix('bursar')->middleware('auth')->group(function () {
     Route::post('/bursar/update-password', [BursarController::class, 'updatePassword'])->name('bursar.updatePassword');
 });
 
+Route::get('/home', function () {
+    $user = Auth::user();
+    if (!$user) {
+        return redirect('/login'); // Redirect to login if the user is not authenticated
+    }
 
+    // Redirect based on roles
+    switch ($user->role) {
+        case 'admin':
+            return redirect('/admin/home');
+        case 'teacher':
+            return redirect('/teacher/home');
+        case 'student':
+            return redirect('/student/home');
+        case 'bursar':
+                return redirect('/bursar/home');
+        default:
+            return redirect('/login'); // Redirect to login if the role is undefined
+    }
+})->name('home');
 
 
 
