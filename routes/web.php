@@ -45,6 +45,7 @@ Route::middleware(['auth','user-role:teacher'])->group(function(){
 Route::middleware(['auth','user-role:admin'])->group(function(){
 
     Route::get("/admin/home",[HomeController::class, 'adminHome'])->name('home.admin');
+
 });
 
 Route::prefix('student')->middleware('auth')->group(function () {
@@ -76,8 +77,10 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/dashboard', [AdminController::class, 'showDashboard'])->name('admin.dashboard');
 
     // Announcement routes
-    Route::get('/upload-announcement', [AdminController::class, 'showUploadAnnouncementForm'])->name('admin.upload-announcement-form');
+
     Route::post('/upload-announcement', [AdminController::class, 'uploadAnnouncement'])->name('admin.upload-announcement');
+
+    Route::get('/upload-announcement', [AdminController::class, 'showUploadAnnouncementForm'])->name('admin.upload-announcement-form');
 
     // Registration routes for classes, teachers, students, subjects, and exams
     Route::get('/register-classes', [AdminController::class, 'registerClasses'])->name('admin.register-classes');
@@ -85,6 +88,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/register-students', [AdminController::class, 'registerStudents'])->name('admin.register-students');
     Route::get('/register-subjects', [AdminController::class, 'registerSubjects'])->name('admin.register-subjects');
     Route::get('/register-exams', [AdminController::class, 'registerExams'])->name('admin.register-exams');
+
 
     // Admin password change route
     Route::get('/change-password', [AdminController::class, 'changePassword'])->name('admin.change-password');

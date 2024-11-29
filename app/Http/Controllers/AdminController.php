@@ -70,16 +70,5 @@ class AdminController extends Controller
     }
 
 
-    public function showDashboard()
-    {
-        // Fetch active announcements for the admin
-        $announcements = Announcement::whereDate('startDate', '<=', now())
-            ->whereDate('endDate', '>=', now())
-            ->get();
 
-            dd($announcements);
-
-        // Pass announcements to the admin dashboard view
-        return view('admin.dashboard', compact('announcements'));
-    }
 }

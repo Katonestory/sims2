@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Announcement;
 
 class HomeController extends Controller
 {
@@ -31,7 +32,10 @@ class HomeController extends Controller
     }
     public function adminHome()
     {
-        return view('admin.dashboard');
+        $announcements = Announcement::latest()->get();
+
+        // Pass them to the dashboard view
+        return view('admin.dashboard', compact('announcements'));
     }
 
     public function bursarHome()
