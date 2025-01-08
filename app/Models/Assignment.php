@@ -19,21 +19,27 @@ class Assignment extends Model
         'dueDate',
     ];
 
-    // Define the relationship with Teacher (user)
+
     public function teacher()
     {
         return $this->belongsTo(User::class, 'teacher_id');
     }
 
-    // Define the relationship with Class
-    public function class()
+
+    public function assignedClass()
     {
-        return $this->belongsTo(SchoolClass::class, 'class_id'); // Replace SchoolClass with your actual class model
+        return $this->belongsTo(Classes::class, 'class_id');
     }
 
-    // Define the relationship with Subject
+
     public function subject()
     {
         return $this->belongsTo(Subject::class, 'subject_id');
     }
+
+    public function thisteacher()
+{
+    // Assuming the teacher's details are stored in the 'teachers' table
+    return $this->belongsTo(Teacher::class, 'teacher_id');
+}
 }

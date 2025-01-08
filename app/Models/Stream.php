@@ -5,34 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Exam extends Model
+class Stream extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'title',
-        'subject_id',
+        'name',
         'class_id',
-        'exam_date',
-        'academic_year',
+        'class_teacher_id',
     ];
 
-
-    public function subject()
-    {
-        return $this->belongsTo(Subject::class);
-    }
-
-
+    // You can define relationships here, e.g., Class and Teacher models
     public function class()
     {
         return $this->belongsTo(Classes::class, 'class_id');
     }
 
-
-    public function results()
+    public function teacher()
     {
-        return $this->hasMany(Result::class);
+        return $this->belongsTo(Teacher::class, 'class_teacher_id');
     }
-
 }

@@ -2,31 +2,42 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Assignment;
+use App\Models\Result;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Subject;
 
 class StudentController extends Controller
 {
     public function mySubjects()
     {
-        return view('student.my-subjects');
+        // Fetch all subjects from the database
+        $subjects = Subject::all();
+
+        if ($subjects->isEmpty()) {
+            return view('student.my-subjects', ['subjects' => [], 'message' => 'No subjects registered yet.']);
+        }
+
+        return view('student.my-subjects', ['subjects' => $subjects, 'message' => null]);
     }
 
-    public function materials()
-    {
-        return view('student.materials');
-    }
+
 
     public function assignments()
     {
-        return view('student.assignments');
+        $assignments = Assignment::latest()->get();
+        return view('student.assignments',compact('assignments'));
     }
 
     public function results()
     {
-        return view('student.results');
+        $studentId = auth()->user()->id;
+        $results = Result::where('student_id', $studentId)->with('exam')->get();
+
+        return view('student.results', compact('results'));
     }
 
     // Method to display the change password form
@@ -66,14 +77,5 @@ class StudentController extends Controller
         return redirect()->route('student.change-password')
                          ->with('status', 'Your password has been updated successfully.');
     }
-    public function showDashboard()
-    {
-        // Fetch active announcements
-        $announcements = Announcement::whereDate('startDate', '<=', now())
-            ->whereDate('endDate', '>=', now())
-            ->get();
 
-        // Pass announcements to the student dashboard view
-        return view('student.dashboard', compact('announcements'));
-    }
 }

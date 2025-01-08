@@ -23,10 +23,10 @@
     <div style="font-size: 14px; line-height: 1.6;">
         @foreach($announcements as $announcement)
             <div style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-                <strong>{{ $announcement->title }}</strong><br>
-                {{-- <small>Start Date: {{ \Carbon\Carbon::parse($announcement->startDate)->format('jS F Y') }} --}}
-                    {{-- @if($announcement->endDate) | End Date: {{ \Carbon\Carbon::parse($announcement->endDate)->format('jS F Y') }} @endif</small> --}}
-                <p>{{ $announcement->message }}</p>
+                <strong style=" font-size: 18px; ">{{ $announcement->title }}</strong><br>
+                <small>Start Date: {{ \Carbon\Carbon::parse($announcement->startDate)->format('jS F Y') }}
+                    @if($announcement->endDate) | End Date: {{ \Carbon\Carbon::parse($announcement->endDate)->format('jS F Y') }} @endif</small>
+                    <p style=" font-size: 18px; ">  {{ strip_tags($announcement->message) }}</p>
             </div>
         @endforeach
     </div>

@@ -19,14 +19,20 @@
     <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">
         My Subjects
     </div>
-    <div style="font-size: 14px; line-height: 1.6;">
-        <p>Welcome to the My Subjects page. Below is the list of your enrolled subjects:</p>
-        <ul style="list-style-type: square; margin-left: 20px; color: #34495e;">
-            <li>Mathematics</li>
-            <li>Science</li>
-            <li>History</li>
-        </ul>
+    <div style="font-size: 18px; line-height: 1.8; padding: 10px;">
+        @if(isset($message))
+            <p style="font-size: 20px; font-weight: bold; color: #333;">{{ $message }}</p>
+        @else
+            <p style="font-size: 20px; font-weight: bold; color: #333;">Welcome to the Subjects page. Below are the subjects for your Class:</p>
+            <ul style="list-style-type: square; margin-left: 20px; color: #34495e; font-size: 18px;">
+                @foreach($subjects as $subject)
+                    <li style="margin-bottom: 10px; font-size: 18px;">
+                        <strong style="font-size: 20px;">{{ $subject->name }}</strong>
+                    </li>
+                @endforeach
+            </ul>
+        @endif
     </div>
-</div>
+
 
 @endsection

@@ -17,11 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->rememberToken();
-            //0=student 1=teacher 2=admin
-            $table->tinyInteger("role")->default(0);
+            $table->tinyInteger('role')->default(0); // Role represented by 0, 1, 2, 3, or 4
+            $table->string('profile_picture')->nullable();
             $table->timestamps();
         });
     }

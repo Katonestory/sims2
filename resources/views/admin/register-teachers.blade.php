@@ -18,36 +18,113 @@
         Register New Teacher
     </div>
     <div style="font-size: 14px; line-height: 1.6;">
-        <form action="{{ route('admin.register-teachers') }}" method="POST">
-            @csrf
+        @if(session('success'))
+        <div style="color: green; margin-bottom: 15px;">{{ session('success') }}</div>
+    @endif
+    <form action="{{ route('admin.register-teachers.submit') }}" method="POST" enctype="multipart/form-data">
+        @csrf
+        <div style="font-size: 14px; line-height: 1.6;">
+            <!-- First Name -->
             <div style="margin-bottom: 15px;">
-                <label for="teacher-first-name" style="font-weight: bold;">First Name:</label>
-                <p><input type="text" id="teacher-first-name" name="first_name" required style="width: 50%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;"></p>
+                <label for="first_name" style="font-weight: bold;">First Name:</label>
+                <p><input type="text" id="first_name" name="first_name" required
+                       style="width: 50%; padding: 10px; border: 1px solid #ccc; margin-top: 5px; border-radius: 5px;"></p>
             </div>
+
+            <!-- Middle Name -->
             <div style="margin-bottom: 15px;">
-                <label for="teacher-middle-name" style="font-weight: bold;">Middle Name:</label>
-                <p><input type="text" id="teacher-middle-name" name="middle_name" style="width: 50%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;"></p>
+                <label for="middle_name" style="font-weight: bold;">Middle Name:</label>
+                <p><input type="text" id="middle_name" name="middle_name"
+                       style="width: 50%; padding: 10px; border: 1px solid #ccc; margin-top: 5px; border-radius: 5px;"></p>
             </div>
+
+            <!-- Surname -->
             <div style="margin-bottom: 15px;">
-                <label for="teacher-surname" style="font-weight: bold;">Surname:</label>
-                <p><input type="text" id="teacher-surname" name="surname" required style="width: 50%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;"></p>
+                <label for="surname" style="font-weight: bold;">Surname:</label>
+                <p><input type="text" id="surname" name="surname" required
+                       style="width: 50%; padding: 10px; border: 1px solid #ccc; margin-top: 5px; border-radius: 5px;"></p>
             </div>
+
+            <!-- Date of Birth -->
             <div style="margin-bottom: 15px;">
-                <label for="teacher-email" style="font-weight: bold;">Email:</label>
-                <p><input type="email" id="teacher-email" name="email" required style="width: 50%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;"></p>
+                <label for="DoB" style="font-weight: bold;">Date of Birth:</label>
+                <p><input type="date" id="DoB" name="DoB" required
+                       style="width: 50%; padding: 10px; border: 1px solid #ccc; margin-top: 5px; border-radius: 5px;"></p>
             </div>
+
+            <!-- Gender -->
             <div style="margin-bottom: 15px;">
-                <label for="teacher-phone" style="font-weight: bold;">Phone Number:</label>
-                <p><input type="tel" id="teacher-phone" name="phone_number" required style="width: 50%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;"></p>
+                <label for="gender" style="font-weight: bold;">Gender:</label>
+               <p>
+                   <select id="gender" name="gender" required
+                            style="width: 50%; padding: 10px; border: 1px solid #ccc; margin-top: 5px; border-radius: 5px;">
+                        <option value="" disabled selected>Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                    </select>
+               </p>
             </div>
+
+            <!-- Email -->
             <div style="margin-bottom: 15px;">
-                <label for="hire-date" style="font-weight: bold;">Hire Date:</label>
-                <p><input type="date" id="hire-date" name="hire_date" required style="width: 50%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;"></p>
+                <label for="email" style="font-weight: bold;">Email:</label>
+                <p><input type="email" id="email" name="email" required
+                       style="width: 50%; padding: 10px; border: 1px solid #ccc; margin-top: 5px; border-radius: 5px;"></p>
             </div>
-            <button type="submit" style="background-color: #007bff; color: white; padding: 10px 15px; border: none; cursor: pointer; margin-top: 10px;">
+
+            <!-- Phone Number -->
+            <div style="margin-bottom: 15px;">
+                <label for="phone_number" style="font-weight: bold;">Phone Number:</label>
+                <p><input type="tel" id="phone_number" name="phone_number" required
+                       style="width: 50%; padding: 10px; border: 1px solid #ccc; margin-top: 5px; border-radius: 5px;"></p>
+            </div>
+
+            <!-- Address -->
+            <div style="margin-bottom: 15px;">
+                <label for="address" style="font-weight: bold;">Address:</label>
+                <p><textarea id="address" name="address" required
+                          style="width: 50%; padding: 10px; border: 1px solid #ccc; margin-top: 5px; border-radius: 5px;"
+                          rows="3"></textarea></p>
+            </div>
+
+            <!-- Hire Date -->
+            <div style="margin-bottom: 15px;">
+                <label for="hireDate" style="font-weight: bold;">Hire Date:</label>
+               <p>
+                   <input type="date" id="hireDate" name="hireDate" required
+                       style="width: 50%; padding: 10px; border: 1px solid #ccc; margin-top: 5px; border-radius: 5px;">
+               </p>
+            </div>
+
+            <!-- Status -->
+            <div style="margin-bottom: 15px;">
+                <label for="status" style="font-weight: bold;">Status:</label>
+                <p>
+                    <select id="status" name="status" required
+                            style="width: 50%; padding: 10px; border: 1px solid #ccc; margin-top: 5px; border-radius: 5px;">
+                        <option value="1" selected>Active</option>
+                        <option value="0">Inactive</option>
+                    </select>
+                </p>
+            </div>
+
+            <!-- Photo Upload -->
+            <div style="margin-bottom: 15px;">
+                <label for="photoPath" style="font-weight: bold;">Photo:</label>
+               <p>
+                   <input type="file" id="photoPath" name="photoPath" accept="image/*"
+                       style="width: 50%; padding: 10px; border: 1px solid #ccc; margin-top: 5px; border-radius: 5px;">
+               </p>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" style="background-color: #007bff; color: white; padding: 10px 15px; border: none; cursor: pointer; margin-top: 10px; border-radius:5px">
                 Register Teacher
             </button>
-        </form>
+        </div>
+    </form>
+
+
     </div>
 </div>
 @endsection

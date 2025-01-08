@@ -1,24 +1,24 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Exam;
+use App\Models\Classes;
+use App\Models\Subject;
+use App\Models\Class;
 
 use Illuminate\Http\Request;
 
 class TeacherController extends Controller
 {
-    public function uploadMaterials()
-    {
-        return view('teacher.upload-materials');
-    }
-
-    public function uploadAssignments()
-    {
-        return view('teacher.upload-assignments');
-    }
 
     public function uploadResults()
     {
-        return view('teacher.upload-results');
+            // Fetch exams from the database
+            $exams = Exam::all();
+            $subjects= Subject::all();
+            $classes= Classes::all();
+
+            return view('teacher.upload-results', compact('exams' , 'subjects' , 'classes'));
     }
 
     public function changePassword()
@@ -44,14 +44,5 @@ class TeacherController extends Controller
 
         return back()->with('status', 'Password updated successfully!');
     }
-    public function showDashboard()
-    {
-        // Fetch active announcements
-        $announcements = Announcement::whereDate('startDate', '<=', now())
-            ->whereDate('endDate', '>=', now())
-            ->get();
 
-        // Pass announcements to the teacher dashboard view
-        return view('teacher.dashboard', compact('announcements'));
-    }
 }

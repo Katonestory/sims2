@@ -13,17 +13,6 @@ class Classes extends Model
     protected $table = 'classes';
 
     // Specify the fields that can be mass-assigned
-    protected $fillable = ['name', 'stream', 'class_teacher_id'];
+    protected $fillable = ['name', 'description'];
 
-    // Define relationships, for example, with teachers
-    public function teacher()
-    {
-        return $this->belongsTo(User::class, 'class_teacher_id');
-    }
-
-    // You can also add a method for students if needed
-    public function students()
-    {
-        return $this->hasMany(Student::class, 'class_id');
-    }
 }

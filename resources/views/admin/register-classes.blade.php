@@ -18,26 +18,23 @@
         Register New Class
     </div>
     <div style="font-size: 14px; line-height: 1.6;">
-        <form action="{{ route('admin.register-classes') }}" method="POST">
+        @if(session('success'))
+    <div style="color: green; font-weight: bold; margin-bottom: 10px;">
+        {{ session('success') }}
+            </div>
+                @endif
+        <form action="{{ route('admin.register-classes.submit') }}" method="POST">
             @csrf
             <div style="margin-bottom: 15px;">
                 <label for="class-name" style="font-weight: bold;">Class Name:</label>
-                <p><input type="text" id="class-name" name="name" required style="width: 50%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;"></p>
+                <p><input type="text" id="class-name" name="name" required style="width: 50%; padding: 8px; border: 1px solid #ccc; margin-top: 5px; border-radius:5px"></p>
             </div>
             <div style="margin-bottom: 15px;">
-                <label for="class-stream" style="font-weight: bold;">Stream:</label>
-                <p><input type="text" id="class-stream" name="stream" required style="width: 50%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;"></p>
+                <label for="class-stream" style="font-weight: bold;"> Description:</label>
+                <p><input type="text" id="class-stream" name="stream" placeholder="OPTIONAL" style="width: 50%; padding: 8px; border: 1px solid #ccc; margin-top: 5px; border-radius:5px"></p>
             </div>
-            <div style="margin-bottom: 15px;">
-                <label for="class-teacher" style="font-weight: bold;">Class Teacher:</label>
-                {{-- <select id="class-teacher" name="class_teacher_id" required style="width: 50%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;">
-                    <option value="">-- Select Teacher --</option>
-                    @foreach ($teachers as $teacher)
-                        <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
-                    @endforeach
-                </select> --}}
-            </div>
-            <button type="submit" style="background-color: #007bff; color: white; padding: 10px 15px; border: none; cursor: pointer; margin-top: 10px;">
+
+            <button type="submit" style="background-color: #007bff; color: white; padding: 10px 15px; border: none; cursor: pointer; margin-top: 10px; border-radius:5px">
                 Register Class
             </button>
         </form>

@@ -18,46 +18,68 @@
         Register New Exam
     </div>
     <div style="font-size: 14px; line-height: 1.6;">
+        @if(session('success'))
+            <div style="color: green; font-weight: bold; margin-bottom: 15px;">
+                {{ session('success') }}
+            </div>
+        @endif
         <form action="{{ route('admin.register-exams') }}" method="POST">
             @csrf
             <div style="margin-bottom: 15px;">
                 <label for="exam-title" style="font-weight: bold;">Exam Title:</label>
-                <p><input type="text" id="exam-title" name="title" required style="width: 50%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;"></p>
+                <p>
+                    <input type="text" id="exam-title" name="title" required
+                           style="width: 50%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;">
+                </p>
             </div>
             <div style="margin-bottom: 15px;">
                 <label for="exam-subject" style="font-weight: bold;">Subject:</label>
                 <p>
-                    {{-- <select id="exam-subject" name="subject_id" required style="width: 50%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;">
+                    <select id="exam-subject" name="subject_id" required
+                            style="width: 50%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;">
                         <option value="" disabled selected>Select Subject</option>
                         @foreach ($subjects as $subject)
                             <option value="{{ $subject->id }}">{{ $subject->name }}</option>
                         @endforeach
-                    </select> --}}
+                    </select>
                 </p>
             </div>
             <div style="margin-bottom: 15px;">
                 <label for="exam-class" style="font-weight: bold;">Class:</label>
                 <p>
-                    {{-- <select id="exam-class" name="class_id" required style="width: 50%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;">
+                    <select id="exam-class" name="class_id" required
+                            style="width: 50%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;">
                         <option value="" disabled selected>Select Class</option>
                         @foreach ($classes as $class)
                             <option value="{{ $class->id }}">{{ $class->name }} - {{ $class->stream }}</option>
                         @endforeach
-                    </select> --}}
+                    </select>
                 </p>
             </div>
             <div style="margin-bottom: 15px;">
                 <label for="exam-date" style="font-weight: bold;">Exam Date:</label>
-                <p><input type="date" id="exam-date" name="exam_date" required style="width: 50%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;"></p>
+                <p>
+                    <input type="date" id="exam-date" name="exam_date" required
+                           style="width: 50%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;">
+                </p>
             </div>
             <div style="margin-bottom: 15px;">
                 <label for="academic-year" style="font-weight: bold;">Academic Year:</label>
-                <p><input type="text" id="academic-year" name="academic_year" required value="2024/2025" readonly style="width: 50%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;"></p>
+                <p>
+                    <select id="academic-year" name="academic_year" required
+                            style="width: 50%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;">
+                        @for ($year = 2000; $year <= date('Y') + 1; $year++)
+                            <option value="{{ $year }}">{{ $year }}</option>
+                        @endfor
+                    </select>
+                </p>
             </div>
-            <button type="submit" style="background-color: #007bff; color: white; padding: 10px 15px; border: none; cursor: pointer; margin-top: 10px;">
+            <button type="submit"
+                    style="background-color: #007bff; color: white; padding: 10px 15px; border: none; cursor: pointer; margin-top: 10px;">
                 Register Exam
             </button>
         </form>
     </div>
+
 </div>
 @endsection

@@ -19,37 +19,31 @@
         Results
     </div>
     <div style="font-size: 14px; line-height: 1.6;">
-        <p>Welcome to the Results page. Below are your latest exam results:</p>
-        <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-            <thead>
-                <tr style="background-color: #3498db; color: white; text-align: left;">
-                    <th style="padding: 8px; border: 1px solid #ddd;">Subject</th>
-                    <th style="padding: 8px; border: 1px solid #ddd;">Score</th>
-                    <th style="padding: 8px; border: 1px solid #ddd;">Grade</th>
-                    <th style="padding: 8px; border: 1px solid #ddd;">Remarks</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr style="background-color: #ecf0f1;">
-                    <td style="padding: 8px; border: 1px solid #ddd;">Mathematics</td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">85%</td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">A</td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">Excellent</td>
-                </tr>
-                <tr>
-                    <td style="padding: 8px; border: 1px solid #ddd;">Science</td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">78%</td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">B+</td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">Good</td>
-                </tr>
-                <tr style="background-color: #ecf0f1;">
-                    <td style="padding: 8px; border: 1px solid #ddd;">History</td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">92%</td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">A+</td>
-                    <td style="padding: 8px; border: 1px solid #ddd;">Outstanding</td>
-                </tr>
-            </tbody>
-        </table>
+        @if($results->isEmpty())
+            <p>No results available at the moment. Please check back later.</p>
+        @else
+            <p>Welcome to the Results page. Below are your latest exam results:</p>
+            <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                <thead>
+                    <tr style="background-color: #3498db; color: white; text-align: left;">
+                        <th style="padding: 8px; border: 1px solid #ddd;">Subject</th>
+                        <th style="padding: 8px; border: 1px solid #ddd;">Score</th>
+                        <th style="padding: 8px; border: 1px solid #ddd;">Grade</th>
+                        <th style="padding: 8px; border: 1px solid #ddd;">Remarks</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($results as $result)
+                        <tr style="{{ $loop->index % 2 == 0 ? 'background-color: #ecf0f1;' : '' }}">
+                            <td style="padding: 8px; border: 1px solid #ddd;">{{ $result->exam->subject->name }}</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">{{ $result->score }}%</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">{{ $result->grade }}</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">{{ $result->remarks ?? 'No remarks' }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        @endif
     </div>
 </div>
 

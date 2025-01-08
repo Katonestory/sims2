@@ -6,33 +6,40 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
     public function up()
     {
-        Schema::create('students', function (Blueprint $table) {
+        Schema::create('teachers', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id'); // Foreign key to users table
+            $table->unsignedBigInteger('user_id')->unique();
             $table->string('first_name');
             $table->string('middle_name')->nullable();
             $table->string('surname');
-            $table->string('email')->unique();
-            $table->string('phone_number');
-            $table->string('student_id')->unique();
             $table->date('DoB');
             $table->string('gender');
+            $table->string('email')->unique();
+            $table->string('phone_number');
             $table->text('address');
-            $table->unsignedBigInteger('class_id')->nullable(); // Foreign key to the classes table
+            $table->date('hireDate');
             $table->tinyInteger('status')->default(1);
             $table->string('photoPath')->nullable();
             $table->timestamps();
 
-            // Foreign key relationships
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('class_id')->references('id')->on('classes')->onDelete('set null');
         });
     }
 
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
     public function down()
     {
-        Schema::dropIfExists('students');
+        Schema::dropIfExists('teachers');
     }
 };

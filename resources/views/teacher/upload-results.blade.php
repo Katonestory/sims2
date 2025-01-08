@@ -20,56 +20,105 @@
         Upload Results
     </div>
     <div style="font-size: 14px; line-height: 1.6;">
-        {{-- <form action="{{ route('teacher.store-results') }}" method="POST">
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                 <ul>
+                @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+                @endforeach
+                </ul>
+            </div>
+        @endif
+        <form action="{{ route('upload.results') }}" method="POST" enctype="multipart/form-data" style="text-align: left; margin-left: 0; width: 50%;">
             @csrf
-            <div style="margin-bottom: 15px;">
-                <label for="student" style="font-weight: bold;">Select Student:</label>
-                <select id="student" name="student_id" required style="width: 100%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;">
-                    <!-- Assuming you will load the students dynamically -->
-                    <option value="">Select a Student</option>
-                    @foreach($students as $student)
-                        <option value="{{ $student->id }}">{{ $student->first_name }} {{ $student->surname }}</option>
-                    @endforeach
-                </select>
-            </div>
+            <!-- Class Selection -->
+            <label for="class_id" style="font-weight: bold; display: block; margin-bottom: 5px;">Select Class:</label>
+            <select name="class_id" id="class_id" required style="width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+                @foreach($classes as $class)
+                    <option value="{{ $class->id }}">{{ $class->name }}</option>
+                @endforeach
+            </select>
 
-            <div style="margin-bottom: 15px;">
-                <label for="exam" style="font-weight: bold;">Select Exam:</label>
-                <select id="exam" name="exam_id" required style="width: 100%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;">
-                    <!-- Assuming you will load the exams dynamically -->
-                    <option value="">Select an Exam</option>
-                    @foreach($exams as $exam)
-                        <option value="{{ $exam->id }}">{{ $exam->title }} ({{ $exam->exam_date }})</option>
-                    @endforeach
-                </select>
-            </div>
+            <!-- Subject Selection -->
+            <label for="subject_id" style="font-weight: bold; display: block; margin-bottom: 5px;">Select Subject:</label>
+            <select name="subject_id" id="subject_id" required style="width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+                @foreach($subjects as $subject)
+                    <option value="{{ $subject->id }}">{{ $subject->name }}</option>
+                @endforeach
+            </select>
 
-            <div style="margin-bottom: 15px;">
-                <label for="score" style="font-weight: bold;">Enter Score:</label>
-                <input type="number" id="score" name="score" required style="width: 100%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;">
-            </div>
+            <!-- Exam Title Dropdown (Populated Dynamically) -->
+            <label for="exam_title" style="font-weight: bold; display: block; margin-bottom: 5px;">Select Exam Title:</label>
+            <select name="exam_title" id="exam_title" required style="width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+                <!-- Options populated via AJAX -->
+            </select>
 
-            <div style="margin-bottom: 15px;">
-                <label for="grade" style="font-weight: bold;">Grade:</label>
-                <input type="text" id="grade" name="grade" required style="width: 100%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;">
-            </div>
+            <!-- Hidden Exam ID Field -->
+            <input type="hidden" name="exam_id" id="exam_id">
 
-            <div style="margin-bottom: 15px;">
-                <label for="remarks" style="font-weight: bold;">Remarks:</label>
-                <textarea id="remarks" name="remarks" required style="width: 100%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;"></textarea>
-            </div>
+            <!-- File Upload -->
+            <label for="file" style="font-weight: bold; display: block; margin-bottom: 5px;">Upload CSV File:</label>
+            <input type="file" name="file" id="file" accept=".csv" required style="width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
 
-            <button type="submit" style="background-color: #007bff; color: white; padding: 10px 15px; border: none; cursor: pointer; margin-top: 10px;">
-                Upload Results
-            </button>
-        </form> --}}
+            <!-- Submit Button -->
+            <button type="submit" style="background-color: #28a745; color: #fff; padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer; display: block; width: 50%;">Upload Results</button>
+            <p style="margin-top: 10px; font-size: 12px; color: #555;">Accepted format: CSV only (Max size: 2MB)</p>
+        </form>
 
-        <!-- Display success message -->
+        <!-- Success/Warning/Error Messages -->
         @if(session('success'))
-            <div style="margin-top: 10px; color: green;">
-                {{ session('success') }}
-            </div>
+            <div style="margin-top: 10px; color: green;">{{ session('success') }}</div>
+        @endif
+        @if(session('warning'))
+            <div style="margin-top: 10px; color: orange;">{{ session('warning') }}</div>
+        @endif
+        @if(session('error'))
+            <div style="margin-top: 10px; color: red;">{{ session('error') }}</div>
         @endif
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const classId = document.getElementById('class_id').value;
+    const subjectId = document.getElementById('subject_id').value;
+
+    if (classId && subjectId) {
+        // If there are already selected values, fetch the exam titles immediately
+        fetchExamTitles(classId, subjectId);
+    }
+});
+
+document.getElementById('subject_id').addEventListener('change', function () {
+    const classId = document.getElementById('class_id').value;
+    const subjectId = this.value;
+
+    if (classId && subjectId) {
+        fetchExamTitles(classId, subjectId);
+    }
+});
+
+function fetchExamTitles(classId, subjectId) {
+    fetch(`/teacher/get-exam-titles?class_id=${classId}&subject_id=${subjectId}`)
+        .then(response => response.json())
+        .then(data => {
+            const examSelect = document.getElementById('exam_title');
+            examSelect.innerHTML = '<option value="">Select Exam</option>';  // Reset the dropdown
+
+            data.forEach(title => {
+                // Populate the dropdown with exam titles
+                examSelect.innerHTML += `<option value="${title.id}">${title.title}</option>`;
+            });
+        })
+        .catch(error => console.error('Error fetching exam titles:', error));
+}
+
+// Update the hidden exam_id when an exam title is selected
+document.getElementById('exam_title').addEventListener('change', function () {
+    const examId = this.value;
+    document.getElementById('exam_id').value = examId;  // Set the hidden exam_id
+});
+
+</script>
+
 @endsection

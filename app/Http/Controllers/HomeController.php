@@ -24,11 +24,16 @@ class HomeController extends Controller
      */
     public function studentHome()
     {
-        return view('student.dashboard');
+
+        $announcements = Announcement::latest()->get();
+
+        return view('student.dashboard', compact('announcements'));
     }
     public function teacherHome()
     {
-        return view('teacher.dashboard');
+        $announcements = Announcement::latest()->get();
+
+        return view('teacher.dashboard', compact('announcements'));
     }
     public function adminHome()
     {
@@ -40,6 +45,8 @@ class HomeController extends Controller
 
     public function bursarHome()
     {
-        return view('bursar.dashboard');
+        $announcements = Announcement::latest()->get();
+
+        return view('bursar.dashboard', compact('announcements'));
     }
 }

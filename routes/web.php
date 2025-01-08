@@ -7,6 +7,9 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\BursarController;
+use App\Http\Controllers\ResultController;
+use App\Http\Controllers\AssignmentsController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -50,7 +53,6 @@ Route::middleware(['auth','user-role:admin'])->group(function(){
 
 Route::prefix('student')->middleware('auth')->group(function () {
     Route::get('/my-subjects', [StudentController::class, 'mySubjects'])->name('student.my-subjects');
-    Route::get('/materials', [StudentController::class, 'materials'])->name('student.materials');
     Route::get('/assignments', [StudentController::class, 'assignments'])->name('student.assignments');
     Route::get('/results', [StudentController::class, 'results'])->name('student.results');
 // Route to display the Change Password form (GET)
@@ -63,9 +65,11 @@ Route::post('/change-password', [StudentController::class, 'updatePassword'])->n
 
 Route::prefix('teacher')->middleware('auth')->group(function () {
 
-    Route::get('/upload-assignments', [TeacherController::class, 'uploadAssignments'])->name('teacher.upload-assignments');
+    Route::get('/upload-assignments', [AssignmentsController::class, 'uploadForm'])->name('teacher.upload-assignments');
+    Route::post('/teacher/upload-assignments', [AssignmentsController::class, 'store'])->name('assignments.upload');
     Route::get('/upload-results', [TeacherController::class, 'uploadResults'])->name('teacher.upload-results');
-    Route::post('/upload-assignments', [TeacherController::class, 'storeAssignments'])->name('teacher.store-assignments');
+    Route::post('/upload-results', [ResultController::class, 'uploadResults'])->name('upload.results');
+    Route::get('/get-exam-titles', [ResultController::class, 'getExamTitles'])->name('getExamTitles');
     Route::get('/change-password', [TeacherController::class, 'changePassword'])->name('teacher.change-password');
     // Route to handle the Change Password form submission (POST)
     Route::post('/change-password', [TeacherController::class, 'updatePassword'])->name('teacher.update-password');
@@ -73,21 +77,25 @@ Route::prefix('teacher')->middleware('auth')->group(function () {
 
 
 Route::prefix('admin')->middleware('auth')->group(function () {
-    // Admin dashboard route
-    Route::get('/dashboard', [AdminController::class, 'showDashboard'])->name('admin.dashboard');
-
-    // Announcement routes
-
+     // Announcement routes
     Route::post('/upload-announcement', [AdminController::class, 'uploadAnnouncement'])->name('admin.upload-announcement');
-
     Route::get('/upload-announcement', [AdminController::class, 'showUploadAnnouncementForm'])->name('admin.upload-announcement-form');
 
-    // Registration routes for classes, teachers, students, subjects, and exams
-    Route::get('/register-classes', [AdminController::class, 'registerClasses'])->name('admin.register-classes');
+    // Registration routes for classes, teachers, students, subjects, and exams plus departments and streams
+    Route::get('/register-classes', [AdminController::class, 'showRegisterClassForm'])->name('admin.register-classes');
+    Route::post('/register-classes', [AdminController::class, 'registerClass'])->name('admin.register-classes.submit');
+    Route::get('admin/register-stream', [AdminController::class, 'showRegisterStreamForm'])->name('admin.register-stream');
+    Route::post('admin/register-stream', [AdminController::class, 'registerStream'])->name('admin.store-stream');
     Route::get('/register-teachers', [AdminController::class, 'registerTeachers'])->name('admin.register-teachers');
+    Route::post('/register-teachers', [AdminController::class, 'registerTeachers'])->name('admin.register-teachers.submit');
     Route::get('/register-students', [AdminController::class, 'registerStudents'])->name('admin.register-students');
-    Route::get('/register-subjects', [AdminController::class, 'registerSubjects'])->name('admin.register-subjects');
+    Route::post('/register-students', [AdminController::class, 'registerStudents'])->name('admin.register-students.submit');
+    Route::get('/admin/register-department', [AdminController::class, 'showRegisterDepartmentForm'])->name('admin.register-department');
+    Route::post('/admin/register-department', [AdminController::class, 'storeDepartment'])->name('admin.store-department');
+    Route::get('/register-subjects', [AdminController::class, 'showRegisterSubjectsForm'])->name('admin.register-subjects');
+    Route::post('/admin/register-subjects', [AdminController::class, 'storeSubject'])->name('admin.store-subjects');
     Route::get('/register-exams', [AdminController::class, 'registerExams'])->name('admin.register-exams');
+    Route::post('/register-exams', [AdminController::class, 'storeExam'])->name('admin.register-exams.submit');
 
 
     // Admin password change route
@@ -110,28 +118,5 @@ Route::prefix('bursar')->middleware('auth')->group(function () {
     Route::get('/change-password', [BursarController::class, 'changePassword'])->name('bursar.changePassword');
     Route::post('/bursar/update-password', [BursarController::class, 'updatePassword'])->name('bursar.updatePassword');
 });
-
-Route::get('/home', function () {
-    $user = Auth::user();
-    if (!$user) {
-        return redirect('/login'); // Redirect to login if the user is not authenticated
-    }
-
-    // Redirect based on roles
-    switch ($user->role) {
-        case 'admin':
-            return redirect('/admin/home');
-        case 'teacher':
-            return redirect('/teacher/home');
-        case 'student':
-            return redirect('/student/home');
-        case 'bursar':
-                return redirect('/bursar/home');
-        default:
-            return redirect('/login'); // Redirect to login if the role is undefined
-    }
-})->name('home');
-
-
 
 ?>

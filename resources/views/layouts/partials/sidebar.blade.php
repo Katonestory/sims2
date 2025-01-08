@@ -2,7 +2,7 @@
     <div class="sb-sidenav-menu">
         <div class="nav"  style="font-size: 1.2rem;">
             <a class="nav-link"
-            href="{{ Auth::user()->role == 'student' ? route('home') : (Auth::user()->role == 'teacher' ? route('home.teacher') : (Auth::user()->role == 'admin' ? route('home.admin') : route('home.bursar'))) }}"
+            href="{{ Auth::user()->role == 'student' ? route('home.student') : (Auth::user()->role == 'teacher' ? route('home.teacher') : (Auth::user()->role == 'admin' ? route('home.admin') : route('home.bursar'))) }}"
 >
              <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
              <span class="nav-text">Dashboard</span>
@@ -53,26 +53,41 @@
                     <div class="sb-nav-link-icon"><i class="fas fa-bullhorn"></i></div>
                     <span class="nav-text">Upload Announcement</span>
                 </a>
-                <a class="nav-link" href="{{ route('admin.register-classes') }}">
-                    <div class="sb-nav-link-icon"><i class="fas fa-school"></i></div>
-                    <span class="nav-text">Register Classes</span>
+                <a class="nav-link" href="#" id="registerDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <div class="sb-nav-link-icon"><i class="fas fa-plus-circle"></i></div>
+                    <span class="nav-text">REGISTER</span>
                 </a>
-                <a class="nav-link" href="{{ route('admin.register-teachers') }}">
-                    <div class="sb-nav-link-icon"><i class="fas fa-chalkboard-teacher"></i></div>
-                    <span class="nav-text">Register Teachers</span>
-                </a>
-                <a class="nav-link" href="{{ route('admin.register-students') }}">
-                    <div class="sb-nav-link-icon"><i class="fas fa-user-graduate"></i></div>
-                    <span class="nav-text">Register Students</span>
-                </a>
-                <a class="nav-link" href="{{ route('admin.register-subjects') }}">
-                    <div class="sb-nav-link-icon"><i class="fas fa-book"></i></div>
-                   <span class="nav-text">Register Subjects</span>
-                </a>
-                <a class="nav-link" href="{{ route('admin.register-exams') }}">
-                    <div class="sb-nav-link-icon"><i class="fas fa-clipboard-list"></i></div>
-                    <span class="nav-text">Register Exam</span>
-                </a>
+                <div class="dropdown-menu" aria-labelledby="registerDropdown">
+                    <a class="dropdown-item" href="{{ route('admin.register-department') }}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-building"></i></div>
+                        <span class="nav-text">Register Department</span>
+                    </a>
+                    <a class="dropdown-item" href="{{ route('admin.register-classes') }}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-school"></i></div>
+                        <span class="nav-text">Register Classes</span>
+                    </a>
+                    <a class="dropdown-item" href="{{ route('admin.register-stream') }}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-stream"></i></div>
+                        <span class="nav-text">Register Stream</span>
+                    </a>
+                    <a class="dropdown-item" href="{{ route('admin.register-teachers') }}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                        <span class="nav-text">Register Teachers</span>
+                    </a>
+                    <a class="dropdown-item" href="{{ route('admin.register-students') }}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-user-graduate"></i></div>
+                        <span class="nav-text">Register Students</span>
+                    </a>
+                    <a class="dropdown-item" href="{{ route('admin.register-subjects') }}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-book"></i></div>
+                        <span class="nav-text">Register Subjects</span>
+                    </a>
+                    <a class="dropdown-item" href="{{ route('admin.register-exams') }}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-clipboard-list"></i></div>
+                        <span class="nav-text">Register Exam</span>
+                    </a>
+                </div>
+
                 <a class="nav-link" href="{{ route('admin.change-password') }}">
                     <div class="sb-nav-link-icon"><i class="fas fa-key"></i></div>
                     <span class="nav-text">Change Password</span>

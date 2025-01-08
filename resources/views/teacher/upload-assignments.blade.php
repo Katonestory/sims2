@@ -12,26 +12,75 @@
     </div>
 </div>
 
-<!-- Content section for Uploading Materials -->
 <div style="height: auto; background-color: #f8f9fa; padding: 10px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); margin-bottom: 20px; margin-top: 5px;">
     <div style="font-size: 18px; font-weight: bold; margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">
         Upload Assignment
     </div>
     <div style="font-size: 14px; line-height: 1.6;">
-        <form action="{{ route('teacher.upload-materials') }}" method="POST" enctype="multipart/form-data">
+        @if(session('success'))
+            <div style="color: green; font-size: 16px; margin-bottom: 20px;">{{ session('success') }}</div>
+        @endif
+
+        @if(session('error'))
+            <div style="color: red; font-size: 16px; margin-bottom: 20px;">{{ session('error') }}</div>
+        @endif
+
+        @if($errors->any())
+            <div style="color: red; font-size: 14px; margin-bottom: 20px;">
+                <ul>
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form action="{{ route('assignments.upload') }}" method="POST" enctype="multipart/form-data">
             @csrf
-            <div style="margin-bottom: 15px;">
-                <label for="material-title" style="font-weight: bold;">Assignment  Title:</label>
-                <p><input type="text" id="material-title" name="title" required style="width: 50%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;"></p>
+
+            <div class="form-group">
+                <label for="title" style="font-weight: bold;">Title:</label>
+               <p> <input type="text" name="title" id="title" required style="width: 50%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"></p>
             </div>
-            <div style="margin-bottom: 15px;">
-                <label for="material-file" style="font-weight: bold;">Upload File:</label>
-                <input type="file" id="material-file" name="file" required style="width: 18%; padding: 8px; border: 1px solid #ccc; margin-top: 5px;">
+
+            <div class="form-group">
+                <label for="class_id" style="font-weight: bold;">Class:</label>
+                <p><select name="class_id" id="class_id" required style="width: 50%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                    @foreach($classes as $class)
+                        <option value="{{ $class->id }}">{{ $class->name }}</option>
+                    @endforeach
+                </select></p>
             </div>
-            <button type="submit" style="background-color: #007bff; color: white; padding: 10px 15px; border: none; cursor: pointer; margin-top: 10px;">
-                Upload
-            </button>
+
+            <div class="form-group">
+                <label for="subject_id" style="font-weight: bold;">Subject:</label>
+                <p><select name="subject_id" id="subject_id" required style="width: 50%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                    @foreach($subjects as $subject)
+                        <option value="{{ $subject->id }}">{{ $subject->name }}</option>
+                    @endforeach
+                </select></p>
+            </div>
+
+            <div class="form-group">
+                <label for="description" style="font-weight: bold;">Description:</label>
+                <p><textarea name="description" id="description" rows="3" style="width: 50%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" placeholder="Enter a brief description (optional)"></textarea></p>
+            </div>
+
+            <div class="form-group">
+                <label for="filpath" style="font-weight: bold;">Upload File:</label>
+               <p> <input type="file" name="filepath" id="filepath" required style="width: 50%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"></p>
+            </div>
+
+            <div class="form-group">
+                <label for="dueDate" style="font-weight: bold;">Due Date:</label>
+                <p><input type="date" name="dueDate" id="dueDate" required style="width: 50%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;"></p>
+            </div>
+
+            <p>
+                <button type="submit" style="background-color: #28a745; color: #fff; padding: 10px 20px; border: none; border-radius: 4px; font-size: 16px; cursor: pointer;">Upload Assignment</button>
+            </p>
         </form>
     </div>
 </div>
+
 @endsection

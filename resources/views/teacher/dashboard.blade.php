@@ -20,21 +20,21 @@
         Announcements
     </div>
     @if(isset($announcements) && $announcements->count() > 0)
-        <div style="font-size: 14px; line-height: 1.6;">
-            @foreach($announcements as $announcement)
-                <div style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
-                    <strong>{{ $announcement->title }}</strong><br>
-                    <small>Start Date: {{ \Carbon\Carbon::parse($announcement->startDate)->format('jS F Y') }}
-                        @if($announcement->endDate) | End Date: {{ \Carbon\Carbon::parse($announcement->endDate)->format('jS F Y') }} @endif</small>
-                    <p>{{ $announcement->message }}</p>
-                </div>
-            @endforeach
-        </div>
-    @else
-        <div style="font-size: 14px; line-height: 1.6;">
-            <p>No announcements yet. Stay tuned for updates from the admin.</p>
-        </div>
-    @endif
+    <div style="font-size: 14px; line-height: 1.6;">
+        @foreach($announcements as $announcement)
+            <div style="margin-bottom: 15px; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+                <strong style=" font-size: 18px; ">{{ $announcement->title }}</strong><br>
+                <small>Start Date: {{ \Carbon\Carbon::parse($announcement->startDate)->format('jS F Y') }}
+                    @if($announcement->endDate) | End Date: {{ \Carbon\Carbon::parse($announcement->endDate)->format('jS F Y') }} @endif</small>
+                    <p style=" font-size: 18px; ">  {{ strip_tags($announcement->message) }}</p>
+            </div>
+        @endforeach
+    </div>
+@else
+    <div style="font-size: 14px; line-height: 1.6;">
+        <p>No announcements yet. Stay tuned for updates from the admin.</p>
+    </div>
+@endif
 </div>
     <p>This is the admin dashboard content.</p>
 @endsection
