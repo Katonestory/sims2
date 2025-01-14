@@ -99,30 +99,6 @@ private function generateRemarks($score)
     }
 }
 
-    public function index()
-    {
-    // Get the logged-in student's results
-    $studentId = Auth::id();
-    $results = Result::with('exam.subject')
-        ->where('student_id', $studentId)
-        ->orderBy('exam_date', 'desc')
-        ->get();
-
-    return view('students.results', compact('results'));
-    }
-
-
-    public function downloadResults()
-    {
-    $studentId = Auth::id();
-    $results = Result::with('exam.subject')
-        ->where('student_id', $studentId)
-        ->get();
-
-    // Generate PDF logic here
-    $pdf = PDF::loadView('students.results-pdf', compact('results'));
-    return $pdf->download('results.pdf');
-    }
 
 
     public function getExamTitles(Request $request)

@@ -15,4 +15,10 @@ class Classes extends Model
     // Specify the fields that can be mass-assigned
     protected $fillable = ['name', 'description'];
 
+    public function streams()
+    {
+        return $this->hasMany(Streams::class);
+    }
+
+
 }

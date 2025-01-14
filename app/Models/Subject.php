@@ -22,9 +22,14 @@ class Subject extends Model
 
 
 
-    // If needed, define other relationships such as for 'department_id'
-    public function department()
-    {
+        // If needed, define other relationships such as for 'department_id'
+     public function department()
+        {
         return $this->belongsTo(Department::class, 'department_id');
-    }
+        }
+
+     public function exams()
+        {
+        return $this->hasMany(Exam::class);
+        }
 }

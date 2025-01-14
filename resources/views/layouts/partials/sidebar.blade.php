@@ -41,6 +41,10 @@
                     <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
                     <span class="nav-text">Upload Results</span>
                 </a>
+                <a class="nav-link" href="{{ route('teacher.mark-attendance') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-check-circle"></i></div>
+                    <span class="nav-text">Mark Attendance</span>
+                </a>
                 <a class="nav-link" href="{{ route('teacher.change-password') }}">
                     <div class="sb-nav-link-icon"><i class="fas fa-key"></i></div>
                     <span class="nav-text">Change Password</span>
@@ -87,12 +91,21 @@
                         <span class="nav-text">Register Exam</span>
                     </a>
                 </div>
+                    <a class="nav-link" href="{{ route('admin.promote') }}">
+                     <div class="sb-nav-link-icon"><i class="fas fa-user-graduate"></i></div>
+                        <span class="nav-text">Promote</span>
+                    </a>
+                    <a class="nav-link" href="{{ route('admin.assignClassTeacher') }}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-user-plus"></i></div>
+                        <span class="nav-text">Assign Class Teacher</span>
+                    </a>
+
 
                 <a class="nav-link" href="{{ route('admin.change-password') }}">
                     <div class="sb-nav-link-icon"><i class="fas fa-key"></i></div>
                     <span class="nav-text">Change Password</span>
                 </a>
-                <!-- Sidebar for Admin -->
+                <!-- Sidebar for Bursar -->
             @elseif (Auth::user()->role == 'bursar')
             <div class="sb-sidenav-menu-heading">Bursar Menu</div>
             <a class="nav-link" href="{{ route('bursar.fee-structure-management') }}">

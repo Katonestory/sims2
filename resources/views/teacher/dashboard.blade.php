@@ -30,11 +30,36 @@
             </div>
         @endforeach
     </div>
-@else
+    @else
     <div style="font-size: 14px; line-height: 1.6;">
         <p>No announcements yet. Stay tuned for updates from the admin.</p>
     </div>
-@endif
+    @endif
 </div>
-    <p>This is the admin dashboard content.</p>
+
+@if(isset($teacher))
+    <!-- Teacher profile -->
+    <div style="background-color: #f8f9fa; padding: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+        <h2 style="font-size: 24px; margin-bottom: 10px;"></h2>
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <!-- Profile picture -->
+            <img src="{{ $teacher->photoPath ? asset('storage/' . $teacher->photoPath) : asset('images/default-profile.png') }}"
+                 alt="Profile Picture"
+                 style="width: 100px; height: 100px; border-radius: 50%; margin-right: 20px;">
+
+            <!-- Teacher info -->
+            <div>
+                <p><strong>Name:</strong> {{ $teacher->first_name }} {{ $teacher->middle_name }} {{ $teacher->surname }}</p>
+                <p><strong>Date of Birth:</strong> {{ $teacher->DoB ?? 'N/A' }}</p>
+                <p><strong>Gender:</strong> {{ $teacher->gender ?? 'N/A' }}</p>
+                <p><strong>Email:</strong> {{ auth()->user()->email }}</p>
+                <p><strong>Phone Number:</strong> {{ $teacher->phone_number ?? 'N/A' }}</p>
+                <p><strong>Address:</strong> {{ $teacher->address ?? 'N/A' }}</p>
+                <p><strong>Hire Date:</strong> {{ $teacher->hireDate ?? 'N/A' }}</p>
+            </div>
+        </div>
+    </div>
+@endif
+
+
 @endsection

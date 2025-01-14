@@ -7,7 +7,11 @@
     <title>SCHOOL INFORMATION MANAGEMENT SYSTEM</title>
     <link rel="icon" href="{{ asset('images/graduatehat.png') }}" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-   <!-- Styles -->
+    <script type="text/javascript">
+        function preventBack() { window.history.forward(); }
+        setTimeout("preventBack()", 0);
+        window.onunload = function () { null };
+    </script>
     <style>
         body {
             margin: 0;
@@ -117,13 +121,12 @@
     <div class="right-side">
         <div class="header">School Information Management System</div>
 
-          <!-- Error Message Section -->
-    @if(session('error'))
-    <div class="alert" style="color: red; text-align: center; margin-bottom: 20px;">
-        {{ session('error') }}
-    </div>
-@endif
-
+        @if(session('error'))
+        <div class="alert alert-danger">
+            {{ session('error') }}
+        </div>
+    @endif
+    <br>
         <div class="form-card">
             <form method="POST" action="/login">
                 @csrf

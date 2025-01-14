@@ -9,18 +9,28 @@ use Illuminate\Http\Request;
 class LoginController extends Controller
 {
     use AuthenticatesUsers;
-
-    protected $redirectTo = '/home';
+    protected $redirectTo = '/';
 
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-        $this->middleware(function ($request,$next){
-            if(auth()->check()){
-                return redirect()->route('home');
+
+        // Custom middleware to redirect authenticated users to their appropriate home page
+        $this->middleware(function ($request, $next) {
+            if (auth()->check()) {
+                // Redirect based on user role
+                if (auth()->user()->role == 'admin') {
+                    return redirect()->route('home.admin');
+                } elseif (auth()->user()->role == 'teacher') {
+                    return redirect()->route('home.teacher');
+                } elseif (auth()->user()->role == 'bursar') {
+                    return redirect()->route('home.bursar');
+                } else {
+                    return redirect()->route('home.student');
+                }
             }
             return $next($request);
-        })->only('showLoginForm');
+        })->only('showLoginForm');  // Apply this logic only when showing the login form
     }
 
     public function username()
@@ -29,30 +39,53 @@ class LoginController extends Controller
     }
 
     public function login(Request $request)
-{
-    $input = $request->all();
-    $this->validate($request, [
-        'email' => 'required|email', // Update validation,
-        'password' => 'required|string',
-    ]);
+    {
+        $input = $request->all();
+        $this->validate($request, [
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
 
-    if (auth()->attempt(['email' => $input['email'], 'password' => $input['password']])) {
-        if (auth()->user()->role == 'admin') {
-            return redirect()->route('home.admin');
+        // Attempt to authenticate the user
+        if (auth()->attempt(['email' => $input['email'], 'password' => $input['password']])) {
+            $response = null;
+
+            // Redirect based on user role
+            if (auth()->user()->role == 'admin') {
+                $response = redirect()->route('home.admin');
+            }
+            elseif (auth()->user()->role == 'teacher') {
+                $response = redirect()->route('home.teacher');
+            }
+            elseif (auth()->user()->role == 'bursar') {
+                $response = redirect()->route('home.bursar');
+            }
+            else {
+                $response = redirect()->route('home.student');
+            }
+
+            // Prevent the login page from being cached
+            $response->header('Cache-Control', 'no-cache, no-store, must-revalidate');
+            $response->header('Pragma', 'no-cache');
+            $response->header('Expires', '0');
+
+            return $response;
+        } else {
+            return redirect('/')->with('error', 'Incorrect username or password');
         }
-        elseif (auth()->user()->role == 'teacher') {
-            return redirect()->route('home.teacher');
-        }
-        elseif (auth()->user()->role == 'bursar') {
-            return redirect()->route('home.bursar');
-        }
-        else {
-            return redirect()->route('home.student');
-        }
-    } else {
-        return redirect('/')->with('error', 'Incorrect username or password'); // Redirect to the welcome page
     }
 
-}
+    public function logout(Request $request)
+    {
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/')->with('message', 'You need to login');
+    }
+
+    public function showLoginForm()
+    {
+        return view('welcome'); // Make sure to create the custom-login view
+    }
 
 }

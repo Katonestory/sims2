@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Models\Announcement;
 use App\Models\Classes;
 use App\Models\Teacher;
@@ -17,14 +18,14 @@ use App\Models\Stream;
 class AdminController extends Controller
 {
 
-public function showUploadAnnouncementForm()
+    public function showUploadAnnouncementForm()
      {
          return view('admin.upload-announcement');
      }
 
 
-public function registerClass(Request $request)
-{
+    public function registerClass(Request $request)
+    {
     $request->validate([
         'name' => 'required|string|max:255',
         'description' => 'string|max:255',
@@ -38,15 +39,15 @@ public function registerClass(Request $request)
     ]);
 
     return redirect()->back()->with('success', 'Class registered successfully!');
-}
+    }
 
-public function showRegisterClassForm()
-{
+    public function showRegisterClassForm()
+    {
     return view('admin.register-classes');
 
-}
+    }
 
-public function registerTeachers(Request $request)
+    public function registerTeachers(Request $request)
      {
          if ($request->isMethod('get')) {
              return view('admin.register-teachers');
@@ -116,13 +117,13 @@ public function registerTeachers(Request $request)
          }
      }
 
-public function showRegisterDepartmentForm()
-{
+    public function showRegisterDepartmentForm()
+    {
     return view('admin.register-department');
-}
+    }
 
-public function storeDepartment(Request $request)
-{
+    public function storeDepartment(Request $request)
+    {
     $request->validate([
         'name' => 'required|string|max:255|unique:departments,name',
         'code' => 'required|string|max:3|unique:departments,code',
@@ -136,19 +137,20 @@ public function storeDepartment(Request $request)
     ]);
 
     return redirect()->route('admin.register-department')->with('success', 'Department registered successfully!');
-}
+    }
 
-public function showRegisterStreamForm()
-{
+    public function showRegisterStreamForm()
+    {
     // Fetch classes and teachers for dropdowns
     $classes = Classes::all();
     $teachers = Teacher::all();
 
     // Return the view with classes and teachers data
     return view('admin.register-stream', compact('classes', 'teachers'));
-}
+    }
 
-public function registerStream(Request $request) {
+    public function registerStream(Request $request)
+    {
     // Validate the request
     $request->validate([
         'name' => 'required|string|max:255',
@@ -165,11 +167,11 @@ public function registerStream(Request $request) {
 
     // Redirect back with success message
     return redirect()->route('admin.register-stream')->with('success', 'Stream registered successfully');
-}
+    }
 
 
-public function registerStudents(Request $request)
-{
+    public function registerStudents(Request $request)
+    {
     if ($request->isMethod('get')) {
         // Fetch available classes to populate the dropdown
         $classes = Classes::all();
@@ -241,15 +243,16 @@ public function registerStudents(Request $request)
         }
     }
 
-}
+    }
 
 
-public function showRegisterSubjectsForm()
+    public function showRegisterSubjectsForm()
      {
          $departments = Department::all();
          return view('admin.register-subjects', compact('departments'));
      }
-public function storeSubject(Request $request)
+
+    public function storeSubject(Request $request)
      {
          $validatedData = $request->validate([
              'name' => 'required|string|max:255',
@@ -269,7 +272,7 @@ public function storeSubject(Request $request)
         }
      }
 
-public function registerExams()
+    public function registerExams()
      {
         $subjects = Subject::all();
         $classes = Classes::all();
@@ -277,7 +280,7 @@ public function registerExams()
          return view('admin.register-exams', compact('subjects', 'classes'));
      }
 
-public function storeExam(Request $request)
+    public function storeExam(Request $request)
      {
          $request->validate([
              'title' => 'required|string|max:255',
@@ -295,31 +298,100 @@ public function storeExam(Request $request)
              return redirect()->back()->with('error', 'Failed to register exam: ' . $e->getMessage());
          }
      }
-public function changePassword()
+    public function changePassword()
      {
          return view('admin.change-password');
      }
-public function uploadAnnouncement(Request $request)
-    {
-        $request->validate([
+
+    public function uploadAnnouncement(Request $request)
+     {
+            $request->validate([
             'title' => 'required|string|max:255|min:10',
             'message' => 'required|string|min:40',
             'startDate' => 'required|date',
             'endDate' => 'nullable|date|after_or_equal:startDate',
-        ]);
+            ]);
 
-        Announcement::create([
+         Announcement::create([
             'title' => $request->title,
             'message' => $request->message,
             'created_by' => auth()->id(),
             'startDate' => $request->startDate,
             'endDate' => $request->endDate,
-        ]);
+            ]);
 
-        return redirect()->route('admin.upload-announcement-form')
-    ->with('success', 'Announcement posted successfully!');
+            return redirect()->route('admin.upload-announcement-form')
+            ->with('success', 'Announcement posted successfully!');
+
+     }
+
+    public function showPromoteForm()
+    {
+        $classes = Classes::all(); // Or get classes from your DB
+        return view('admin.promote', compact('classes'));
     }
 
+    public function promoteStudent(Request $request)
+    {
+        // Fetch student by their ID (not student_id)
+        $student = Student::find($request->student_id);  // Ensure the correct ID is passed
 
+        if ($student) {
+            $student->class_id = $request->class;
+            $student->stream_id = $request->stream;
+            $student->save();
+
+            return redirect()->route('admin.promote')->with('success', 'Student promoted successfully!');
+        }
+
+        return back()->with('error', 'Student not found');
+    }
+    public function showAssignClassTeacherForm()
+    {
+        $classes = Classes::all();
+        $teachers = Teacher::all();
+
+        return view('admin.assign-class-teacher', compact('classes', 'teachers'));
+    }
+
+    public function assignClassTeacher(Request $request)
+    {
+        $request->validate([
+            'class_id' => 'required|exists:classes,id',
+            'stream_id' => 'required|exists:streams,id',
+            'teacher_id' => 'required|exists:teachers,id',
+        ]);
+
+        // Update the stream with the selected teacher
+        $stream = Stream::find($request->stream_id);
+        $stream->class_teacher_id = $request->teacher_id;
+        $stream->save();
+
+        return redirect()->back()->with('success', 'Class teacher assigned successfully.');
+    }
+
+    public function getStreamsByClasses(Request $request)
+    {
+        $streams = Stream::where('class_id', $request->class_id)->get();
+        return response()->json($streams);
+    }
+
+    public function getStreamsByClass($classId)
+    {
+        // Get streams associated with a particular class
+        $streams = Stream::where('class_id', $classId)->get(['id', 'name']);
+        return response()->json($streams);
+    }
+
+    public function searchStudent(Request $request)
+    {
+    $query = $request->input('query');
+
+    $students = DB::table('students')
+    ->where(DB::raw("CONCAT(first_name, ' ', middle_name, ' ', surname)"), 'like', '%' . $query . '%')
+    ->get(['id', DB::raw("CONCAT(first_name, ' ', middle_name, ' ', surname) as name")]);
+
+    return response()->json($students);
+    }
 
 }

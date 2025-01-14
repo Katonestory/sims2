@@ -1,6 +1,6 @@
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
     <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3" href="{{ url('home') }}" style="font-size: 1.5rem; letter-spacing: 8px;">SIMS</a>
+    <a class="navbar-brand ps-3" href="{{ route('home.' . auth()->user()->role) }}" style="font-size: 1.5rem; letter-spacing: 8px;">SIMS</a>
     <!-- Sidebar Toggle-->
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
     <!-- Navbar Search-->

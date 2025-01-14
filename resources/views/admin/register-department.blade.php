@@ -7,8 +7,8 @@
         <span style="color: blue;">{{ \Carbon\Carbon::now()->format('l, jS F Y') }}</span>
     </div>
     <div style="display: flex; justify-content: space-between; font-size: 14px;">
-        <span>Register Classes</span>
-        <span>Admin > Register Classes</span>
+        <span>Register Department</span>
+        <span>Admin > Register Department</span>
     </div>
 </div>
 <div style="font-size: 14px; line-height: 1.6;">

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Announcement;
+use App\Models\Teacher;
+use App\Models\Student;
 
 class HomeController extends Controller
 {
@@ -25,19 +27,28 @@ class HomeController extends Controller
     public function studentHome()
     {
 
-        $announcements = Announcement::latest()->get();
+        $userId = auth()->id(); // Get the authenticated user's ID
 
-        return view('student.dashboard', compact('announcements'));
+        // Fetch student data, joining with the users table
+        $student = Student::where('user_id', $userId)->first();
+
+        $announcements = Announcement::where('endDate', '>=', now())->latest()->get();
+
+        return view('student.dashboard', compact('student', 'announcements'));
     }
     public function teacherHome()
     {
-        $announcements = Announcement::latest()->get();
+        $userId = auth()->id(); // Get the authenticated user's ID
 
-        return view('teacher.dashboard', compact('announcements'));
+        // Fetch teacher's data, joining with the users table
+        $teacher = Teacher::where('user_id', $userId)->first();
+        $announcements = Announcement::where('endDate', '>=', now())->latest()->get();
+
+        return view('teacher.dashboard', compact('teacher', 'announcements'));
     }
     public function adminHome()
     {
-        $announcements = Announcement::latest()->get();
+        $announcements = Announcement::where('endDate', '>=', now())->latest()->get();
 
         // Pass them to the dashboard view
         return view('admin.dashboard', compact('announcements'));
@@ -45,7 +56,7 @@ class HomeController extends Controller
 
     public function bursarHome()
     {
-        $announcements = Announcement::latest()->get();
+        $announcements = Announcement::where('endDate', '>=', now())->latest()->get();
 
         return view('bursar.dashboard', compact('announcements'));
     }

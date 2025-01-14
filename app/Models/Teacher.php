@@ -44,7 +44,10 @@ class Teacher extends Model
     {
         return $this->belongsTo(User::class);
     }
-
+    public function streams()
+    {
+        return $this->hasMany(Stream::class, 'class_teacher_id');
+    }
 
     /**
      * Automatically update the 'name' field in the User model

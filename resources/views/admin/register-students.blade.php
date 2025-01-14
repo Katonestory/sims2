@@ -63,7 +63,7 @@
             </div>
             <div style="margin-bottom: 15px;">
                 <label for="address" style="font-weight: bold;">Address:</label>
-                <p><textarea id="address" name="address" rows="3" style="width: 50%; padding: 8px; border: 1px solid #ccc; margin-top: 5px; border-radius: 5px;"></textarea></p>
+                <p><textarea id="address" name="address" rows="3" required placeholder="SPECIFY REGION NAME IN CAPITAL LETTERS" style="width: 50%; padding: 8px; border: 1px solid #ccc; margin-top: 5px; border-radius: 5px;"></textarea></p>
             </div>
             <div style="margin-bottom: 15px;">
                 <label for="class-id" style="font-weight: bold;">Class:</label>
@@ -81,9 +81,6 @@
                 <p>
                     <select id="stream-id" name="stream_id" required style="width: 50%; padding: 8px; border: 1px solid #ccc; margin-top: 5px; border-radius: 5px;">
                         <option value="" disabled selected>Select Stream</option>
-                        @foreach ($streams as $stream)
-                            <option value="{{ $stream->id }}">{{ $stream->name }}</option>
-                        @endforeach
                     </select>
                 </p>
             </div>
@@ -107,4 +104,26 @@
         </form>
     </div>
 </div>
+<script>
+    document.getElementById('class-id').addEventListener('change', function() {
+        const classId = this.value;
+        const streamSelect = document.getElementById('stream-id');
+
+        // Clear existing options
+        streamSelect.innerHTML = '<option value="" disabled selected>Select Stream</option>';
+
+        // Fetch streams from the server
+        fetch(`/admin/get-streams/${classId}`)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(stream => {
+                    const option = document.createElement('option');
+                    option.value = stream.id;
+                    option.textContent = stream.name;
+                    streamSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching streams:', error));
+    });
+    </script>
 @endsection
