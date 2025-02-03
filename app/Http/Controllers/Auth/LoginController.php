@@ -25,6 +25,8 @@ class LoginController extends Controller
                     return redirect()->route('home.teacher');
                 } elseif (auth()->user()->role == 'bursar') {
                     return redirect()->route('home.bursar');
+                } elseif (auth()->user()->role == 'parent') {
+                    return redirect()->route('home.parent');
                 } else {
                     return redirect()->route('home.student');
                 }
@@ -59,6 +61,9 @@ class LoginController extends Controller
             }
             elseif (auth()->user()->role == 'bursar') {
                 $response = redirect()->route('home.bursar');
+            }
+            elseif (auth()->user()->role == 'parent') {
+                $response = redirect()->route('home.parent');
             }
             else {
                 $response = redirect()->route('home.student');

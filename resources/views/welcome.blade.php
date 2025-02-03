@@ -1,17 +1,14 @@
 <!-- resources/views/welcome.blade.php -->
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SCHOOL INFORMATION MANAGEMENT SYSTEM</title>
     <link rel="icon" href="{{ asset('images/graduatehat.png') }}" type="image/png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <script type="text/javascript">
-        function preventBack() { window.history.forward(); }
-        setTimeout("preventBack()", 0);
-        window.onunload = function () { null };
-    </script>
+
     <style>
         body {
             margin: 0;
@@ -20,11 +17,13 @@
             height: 100vh;
             color: #2c3e50;
         }
+
         .left-side {
             width: 70%;
             background: url('/images/welcome.jpg') no-repeat center center;
             background-size: cover;
         }
+
         .right-side {
             width: 30%;
             display: flex;
@@ -36,6 +35,7 @@
             box-shadow: -4px 0 10px rgba(0, 0, 0, 0.1);
             font-family: 'Times New Roman', serif;
         }
+
         .header {
             font-size: 2rem;
             font-weight: bold;
@@ -44,6 +44,7 @@
             margin-bottom: 100px;
             text-align: center;
         }
+
         .form-card {
             width: 100%;
             max-width: 400px;
@@ -52,16 +53,20 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+
         .form-group {
             margin-bottom: 20px;
             font-weight: bold;
 
         }
+
         label {
             font-size: 1.2rem;
             color: #2c3e50;
         }
-        input[type="text"], input[type="password"] {
+
+        input[type="text"],
+        input[type="password"] {
             width: 100%;
             padding: 12px;
             margin-top: 5px;
@@ -70,16 +75,20 @@
             font-size: 1rem;
             color: #34495e;
         }
-        input[type="text"]:focus, input[type="password"]:focus {
+
+        input[type="text"]:focus,
+        input[type="password"]:focus {
             border-color: #3498db;
             outline: none;
         }
+
         .btn-container {
             margin-top: 20px;
             display: flex;
             gap: 10px;
             justify-content: center;
         }
+
         .btn {
             padding: 12px 30px;
             color: white;
@@ -92,9 +101,11 @@
             align-items: center;
             gap: 8px;
         }
+
         .btn-login {
             background-color: #3498db;
         }
+
         .btn-login:hover {
             background-color: #2980b9;
         }
@@ -106,27 +117,30 @@
             margin-top: 20px;
 
         }
-        .alert {
-    padding: 10px;
-    border: 1px solid red; /* You can adjust the border color */
-    background-color: #f8d7da; /* Light red background */
-    border-radius: 5px;
-               }
 
+        .alert {
+            padding: 10px;
+            border: 1px solid red;
+            /* You can adjust the border color */
+            background-color: #f8d7da;
+            /* Light red background */
+            border-radius: 5px;
+        }
     </style>
 </head>
+
 <body>
     <div class="left-side"></div>
 
     <div class="right-side">
         <div class="header">School Information Management System</div>
 
-        @if(session('error'))
-        <div class="alert alert-danger">
-            {{ session('error') }}
-        </div>
-    @endif
-    <br>
+        @if (session('error'))
+            <div class="alert alert-danger">
+                {{ session('error') }}
+            </div>
+        @endif
+        <br>
         <div class="form-card">
             <form method="POST" action="/login">
                 @csrf
@@ -136,8 +150,10 @@
                 </div>
                 <div class="form-group" style="position: relative;">
                     <label for="password"><b>Password</b></label>
-                    <input type="password" id="password" name="password" placeholder="Enter your password" required style="padding-right: 10px;">
-                    <i class="fas fa-eye" id="togglePassword" style="position: absolute; right: 10px; top: 55%;  cursor: pointer;"></i>
+                    <input type="password" id="password" name="password" placeholder="Enter your password" required
+                        style="padding-right: 10px;">
+                    <i class="fas fa-eye" id="togglePassword"
+                        style="position: absolute; right: 10px; top: 55%;  cursor: pointer;"></i>
                 </div>
 
                 <div class="btn-container">
@@ -155,20 +171,21 @@
     </div>
 
     <script>
-          document.addEventListener('DOMContentLoaded', function () {
-        const togglePassword = document.querySelector('#togglePassword');
-        const passwordField = document.querySelector('#password');
+        document.addEventListener('DOMContentLoaded', function() {
+            const togglePassword = document.querySelector('#togglePassword');
+            const passwordField = document.querySelector('#password');
 
-        togglePassword.addEventListener('click', function () {
-            // Toggle the type attribute
-            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordField.setAttribute('type', type);
+            togglePassword.addEventListener('click', function() {
+                // Toggle the type attribute
+                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordField.setAttribute('type', type);
 
-            // Toggle the icon
-            this.classList.toggle('fa-eye');
-            this.classList.toggle('fa-eye-slash');
+                // Toggle the icon
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
         });
-    });
     </script>
 </body>
+
 </html>

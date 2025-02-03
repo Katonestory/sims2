@@ -13,6 +13,8 @@ use App\Models\Exam;
 use App\Models\User;
 use App\Models\Department;
 use App\Models\Stream;
+use App\Models\ParentModel;
+use App\Models\ParentStudent;
 
 
 class AdminController extends Controller
@@ -172,77 +174,114 @@ class AdminController extends Controller
 
     public function registerStudents(Request $request)
     {
-    if ($request->isMethod('get')) {
-        // Fetch available classes to populate the dropdown
-        $classes = Classes::all();
-        $streams = Stream::all();
+        if ($request->isMethod('get')) {
+            // Fetch available classes and streams to populate the dropdown.
+            $classes = Classes::all();
+            $streams = Stream::all();
 
-        return view('admin.register-students', compact('classes', 'streams'));
-    }
-
-    if ($request->isMethod('post')) {
-        try {
-            // Validate the form inputs
-            $request->validate([
-                'first_name' => 'required|string|max:255',
-                'middle_name' => 'nullable|string|max:255',
-                'surname' => 'required|string|max:255',
-                'DoB' => 'required|date',
-                'gender' => 'required|in:Male,Female',
-                'email' => 'required|email|unique:users,email',
-                'phone_number' => 'required|string|max:15',
-                'student_id' => 'nullable|string|unique:students,student_id',
-                'address' => 'nullable|string',
-                'class_id' => 'required|exists:classes,id',
-                'stream_id' => 'required|exists:streams,id',
-                'status' => 'required|in:0,1',
-                'photoPath' => 'nullable|image|max:2048', // Limit the image size to 2MB
-            ]);
-
-            // Generate the default password using the surname in uppercase
-            $defaultPassword = strtoupper($request->surname);
-
-            // Create a user account
-            $user = User::create([
-                'name' => $request->first_name . ' ' . $request->surname,
-                'email' => $request->email,
-                'password' => bcrypt($defaultPassword),
-                'role' => 0,
-            ]);
-
-            $photoPath = null;
-            if ($request->hasFile('photoPath')) {
-                $photoPath = $request->file('photoPath')->store('photos', 'public');
-            }
-
-            // Save the student details
-            Student::create([
-                'user_id' => $user->id,
-                'first_name' => $request->first_name,
-                'middle_name' => $request->middle_name,
-                'surname' => $request->surname,
-                'email' => $request->email,
-                'phone_number' => $request->phone_number,
-                'student_id' => $request->student_id,
-                'DoB' => $request->DoB,
-                'gender' => $request->gender,
-                'address' => $request->address,
-                'class_id' => $request->class_id,
-                'stream_id' => $request->stream_id,
-                'status' => $request->status,
-                'photoPath' => $photoPath,
-            ]);
-
-            return redirect()->back()->with('success', 'Student registered successfully! Default password is their surname in uppercase.');
-        } catch (\Exception $e) {
-            // Log the error for debugging
-            \Log::error('Student Registration Error: ' . $e->getMessage());
-
-            // Provide feedback to the user
-            return redirect()->back()->with('error', 'An error occurred during registration. Please try again or contact support.');
+            return view('admin.register-students', compact('classes', 'streams'));
         }
-    }
 
+        if ($request->isMethod('post')) {
+            try {
+                // Validate the student inputs.
+                $request->validate([
+                    'first_name'   => 'required|string|max:255',
+                    'middle_name'  => 'nullable|string|max:255',
+                    'surname'      => 'required|string|max:255',
+                    'DoB'          => 'required|date',
+                    'gender'       => 'required|in:Male,Female',
+                    'email'        => 'required|email|unique:users,email',
+                    'phone_number' => 'required|string|max:15',
+                    'student_id'   => 'nullable|string|unique:students,student_id',
+                    'address'      => 'nullable|string',
+                    'class_id'     => 'required|exists:classes,id',
+                    'stream_id'    => 'required|exists:streams,id',
+                    'status'       => 'required|in:0,1',
+                    'photoPath'    => 'nullable|image|max:2048', // Limit the image size to 2MB.
+                ]);
+
+                // Generate the default password using the surname in uppercase for the student.
+                $defaultPassword = strtoupper($request->surname);
+
+                // Create a user account for the student.
+                $studentUser = User::create([
+                    'name'     => $request->first_name . ' ' . $request->surname,
+                    'email'    => $request->email,
+                    'password' => bcrypt($defaultPassword),
+                    'role'     => 0,  // Adjust the role for students as needed.
+                ]);
+
+                $photoPath = null;
+                if ($request->hasFile('photoPath')) {
+                    $photoPath = $request->file('photoPath')->store('photos', 'public');
+                }
+
+                // Save the student details.
+                $student = Student::create([
+                    'user_id'      => $studentUser->id,
+                    'first_name'   => $request->first_name,
+                    'middle_name'  => $request->middle_name,
+                    'surname'      => $request->surname,
+                    'email'        => $request->email,
+                    'phone_number' => $request->phone_number,
+                    'student_id'   => $request->student_id,
+                    'DoB'          => $request->DoB,
+                    'gender'       => $request->gender,
+                    'address'      => $request->address,
+                    'class_id'     => $request->class_id,
+                    'stream_id'    => $request->stream_id,
+                    'status'       => $request->status,
+                    'photoPath'    => $photoPath,
+                ]);
+
+                // Handle parent registration if provided.
+                if ($request->has('parent_first_name') && is_array($request->parent_first_name)) {
+
+
+                    // Optionally, you may add further validation for parent inputs.
+                    $parentFirstNames = $request->input('parent_first_name');
+                    $parentSurnames   = $request->input('parent_surname');
+                    $parentEmails     = $request->input('parent_email');
+                    $parentPhones     = $request->input('parent_phone');
+
+                    // Loop over each provided parent.
+                    for ($i = 0; $i < count($parentFirstNames); $i++) {
+                        // Prepare the parent's data.
+                        $pFirstName = $parentFirstNames[$i];
+                        $pSurname   = $parentSurnames[$i];
+                        $pEmail     = $parentEmails[$i];
+                        $pPhone     = $parentPhones[$i];
+
+                        // Create a user record for the parent.
+                        $parentUser = User::create([
+                            'name'     => $pFirstName . ' ' . $pSurname,
+                            'email'    => $pEmail,
+                            'password' => bcrypt(strtoupper($pSurname)),
+                            'role'     => 4,
+                        ]);
+
+                        // Create the parent record.
+                        // Note: Here the 'user_id' field references the id in the users table.
+                        $parentRecord = ParentModel::create([
+                            'user_id'      => $parentUser->id,
+                            'phone_number' => $pPhone,
+                        ]);
+
+                        // Create a pivot entry to relate this parent to the student.
+                        // Using the defined many-to-many relationship on the Parent model.
+                        $parentRecord->student()->attach($student->id);
+                    }
+                }
+
+                return redirect()->back()->with('success', 'Student and parent(s) registered successfully! The student and Parent  default password is their surname in uppercase.');
+            } catch (\Exception $e) {
+                // Log the error for debugging.
+                \Log::error('Student Registration Error: ' . $e->getMessage());
+
+                return redirect()->back()->with('error', 'An error occurred during registration. Please try again or contact support.');
+            }
+        }
     }
 
 
@@ -346,7 +385,7 @@ class AdminController extends Controller
 
         return back()->with('error', 'Student not found');
     }
-    public function showAssignClassTeacherForm()
+      public function showAssignClassTeacherForm()
     {
         $classes = Classes::all();
         $teachers = Teacher::all();

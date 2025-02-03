@@ -17,7 +17,7 @@ class Classes extends Model
 
     public function streams()
     {
-        return $this->hasMany(Streams::class);
+        return $this->hasMany(Stream::class,'class_id');
     }
 
 

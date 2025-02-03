@@ -11,6 +11,8 @@ use App\Http\Controllers\ResultController;
 use App\Http\Controllers\AssignmentsController;
 
 
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -35,6 +37,7 @@ Route::group(['middleware' => 'prevent-back'],function(){
     Route::middleware(['auth','user-role:student'])->group(function(){
 
         Route::get('/student/home', [HomeController::class, 'studentHome'])->name('home.student');
+
     });
 
     //teacher  route
@@ -98,6 +101,9 @@ Route::group(['middleware' => 'prevent-back'],function(){
        Route::post('/register-students', [AdminController::class, 'registerStudents'])->name('admin.register-students.submit');
        Route::get('get-streams/{classId}', [StreamController::class, 'getStreams']);
 
+       Route::get('/search-students', [HomeController::class, 'search'])->name('admin.students.search');
+       Route::get('/search-teachers', [HomeController::class, 'searching'])->name('admin.teachers.search');
+
 
        Route::get('/admin/register-department', [AdminController::class, 'showRegisterDepartmentForm'])->name('admin.register-department');
        Route::post('/admin/register-department', [AdminController::class, 'storeDepartment'])->name('admin.store-department');
@@ -140,7 +146,11 @@ Route::group(['middleware' => 'prevent-back'],function(){
         Route::post('/bursar/update-password', [BursarController::class, 'updatePassword'])->name('bursar.updatePassword');
     });
 
+      //parent routes
+      Route::middleware(['auth','user-role:parent'])->group(function(){
 
+        Route::get("/parent/home",[HomeController::class, 'parentHome'])->name('home.parent');
+    });
 });
 
 ?>

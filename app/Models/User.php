@@ -46,16 +46,20 @@ class User extends Authenticatable
 
     protected function role(): Attribute{
         return new Attribute(
-            get: fn($value) => ["student","teacher","admin","bursar" ][$value],
+            get: fn($value) => ["student","teacher","admin","bursar","parent" ][$value],
         );
     }
 
     public function teacher()
-{
-    return $this->hasOne(Teacher::class);
-}
-public function student()
-{
-    return $this->hasOne(Student::class);
-}
+    {
+        return $this->hasOne(Teacher::class);
+    }
+    public function student()
+    {
+        return $this->hasOne(Student::class);
+    }
+    public function parent()
+    {
+        return $this->hasOne(ParentModel::class);
+    }
 }
