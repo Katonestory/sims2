@@ -4,7 +4,9 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Auth;
+use Illuminate\Support\Facades\Auth;
+
+
 class UserRoleMiddleware
 {
     /**
@@ -16,10 +18,11 @@ class UserRoleMiddleware
      */
     public function handle(Request $request, Closure $next, $role)
     {
-        if (Auth::check() && Auth::user()->role == $role) {
+        // Check if the user role matches or if a temporary role is stored in the session
+        if (Auth::check() && (Auth::user()->role == $role || $request->session()->get('selected_student_role') == $role)) {
             return $next($request);
         }
-    
+
         return response()->json(["message" => "You don't have permission to access this page."], 403);
     }
 }

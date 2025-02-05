@@ -11,6 +11,8 @@ use App\Models\Classes;
 use App\Models\Subject;
 use App\Models\Exam;
 use App\Models\Stream;
+use App\Models\ParentModel;
+use App\Models\ParentStudent;
 
 class HomeController extends Controller
 {
@@ -29,18 +31,36 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function studentHome()
+    public function studentHome(Request $request)
     {
+        // Check if a parent selected a student and stored it in the session
+        $selectedStudentId = $request->session()->get('selected_student_id');
 
-        $userId = auth()->id(); // Get the authenticated user's ID
+        if ($selectedStudentId) {
+        // Fetch student data based on the selected student ID
+        $student = Student::find($selectedStudentId);
 
-        // Fetch student data, joining with the users table
-        $student = Student::where('user_id', $userId)->first();
+        if (!$student) {
+            return redirect()->route('home.parent')->with('error', 'Selected student not found.');
+        }
+        } else {
+            // Regular student access: fetch data based on the authenticated user's ID
+            $userId = auth()->id();
+            $student = Student::where('user_id', $userId)->first();
 
+        if (!$student) {
+            return redirect()->route('login')->with('error', 'Student not found.');
+            }
+        }
+
+        // Fetch announcements
         $announcements = Announcement::where('endDate', '>=', now())->latest()->get();
 
+            // Render the student dashboard
         return view('student.dashboard', compact('student', 'announcements'));
     }
+
+
     public function teacherHome()
     {
         $userId = auth()->id(); // Get the authenticated user's ID
@@ -51,8 +71,10 @@ class HomeController extends Controller
 
         return view('teacher.dashboard', compact('teacher', 'announcements'));
     }
+
+
     public function adminHome()
-{
+    {
     $announcements = Announcement::where('endDate', '>=', now())->latest()->get();
 
     // Fetch data for each component
@@ -90,7 +112,7 @@ class HomeController extends Controller
         'students',
         'studentCount'
     ));
-}
+    }
 
     public function bursarHome()
     {
@@ -99,12 +121,42 @@ class HomeController extends Controller
         return view('bursar.dashboard', compact('announcements'));
     }
 
+
     public function parentHome()
     {
-        $announcements = Announcement::where('endDate', '>=', now())->latest()->get();
+        $parentId = ParentModel::where('user_id', auth()->id())->value('id'); // Get parent's actual ID
 
-        return view('parent.dashboard', compact('announcements'));
+        if (!$parentId) {
+            return back()->with('error', 'Parent record not found.');
+        }
+
+        session()->forget(['selected_student_id', 'selected_student_role']);
+
+        $students = Student::join('parent_student', 'students.id', '=', 'parent_student.student_id')
+            ->where('parent_student.parent_id', $parentId)
+            ->select('students.*')
+            ->get();
+
+        return view('parent.dashboard', compact('students'));
+
     }
+
+
+    public function selectStudent(Request $request)
+    {
+        $student = \App\Models\Student::find($request->student_id);
+
+        if (!$student) {
+            return back()->with('error', 'Student not found.');
+        }
+
+        // Store selected student ID in session
+        $request->session()->put('selected_student_id', $student->id);
+        $request->session()->put('selected_student_role', 'student'); // Store role as student
+
+        return redirect()->route('home.student');
+    }
+
 
     public function search(Request $request)
     {

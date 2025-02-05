@@ -1,21 +1,28 @@
 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
     <div class="sb-sidenav-menu">
-        <div class="nav"  style="font-size: 1.2rem;">
+        <div class="nav" style="font-size: 1.2rem;">
             <a class="nav-link"
-            href="{{ Auth::user()->role == 'student' ? route('home.student') : (Auth::user()->role == 'teacher' ? route('home.teacher') : (Auth::user()->role == 'admin' ? route('home.admin') : route('home.bursar'))) }}"
->
-             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
-             <span class="nav-text">Dashboard</span>
-         </a>
+                href="{{ session()->has('selected_student_id')
+                    ? route('home.student')
+                    : (Auth::user()->role == 'student'
+                        ? route('home.student')
+                        : (Auth::user()->role == 'teacher'
+                            ? route('home.teacher')
+                            : (Auth::user()->role == 'admin'
+                                ? route('home.admin')
+                                : route('home.bursar')))) }}">
+                <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                <span class="nav-text">Dashboard</span>
+            </a>
 
-            <!-- Sidebar for Student -->
-            @if (Auth::user()->role == 'student')
+
+            @if (session()->has('selected_student_id'))
+                <!-- Sidebar for Selected Student -->
                 <div class="sb-sidenav-menu-heading">Student Menu</div>
                 <a class="nav-link" href="{{ route('student.my-subjects') }}">
                     <div class="sb-nav-link-icon"><i class="fas fa-book"></i></div>
                     <span class="nav-text">My Subjects</span>
                 </a>
-
                 <a class="nav-link" href="{{ route('student.assignments') }}">
                     <div class="sb-nav-link-icon"><i class="fas fa-tasks"></i></div>
                     <span class="nav-text">Assignments</span>
@@ -28,14 +35,32 @@
                     <div class="sb-nav-link-icon"><i class="fas fa-key"></i></div>
                     <span class="nav-text">Change Password</span>
                 </a>
-
-            <!-- Sidebar for Teacher -->
+            @elseif (Auth::user()->role == 'student')
+                <!-- Sidebar for Logged-in Student -->
+                <div class="sb-sidenav-menu-heading">Student Menu</div>
+                <a class="nav-link" href="{{ route('student.my-subjects') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-book"></i></div>
+                    <span class="nav-text">My Subjects</span>
+                </a>
+                <a class="nav-link" href="{{ route('student.assignments') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-tasks"></i></div>
+                    <span class="nav-text">Assignments</span>
+                </a>
+                <a class="nav-link" href="{{ route('student.results') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-chart-bar"></i></div>
+                    <span class="nav-text">Results</span>
+                </a>
+                <a class="nav-link" href="{{ route('student.change-password') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-key"></i></div>
+                    <span class="nav-text">Change Password</span>
+                </a>
+                <!-- Sidebar for Teacher -->
             @elseif (Auth::user()->role == 'teacher')
                 <div class="sb-sidenav-menu-heading">Teacher Menu</div>
 
                 <a class="nav-link" href="{{ route('teacher.upload-assignments') }}">
                     <div class="sb-nav-link-icon"><i class="fas fa-pencil-alt"></i></div>
-                   <span class="nav-text">Upload Assignments</span>
+                    <span class="nav-text">Upload Assignments</span>
                 </a>
                 <a class="nav-link" href="{{ route('teacher.upload-results') }}">
                     <div class="sb-nav-link-icon"><i class="fas fa-file-alt"></i></div>
@@ -50,14 +75,15 @@
                     <span class="nav-text">Change Password</span>
                 </a>
 
-            <!-- Sidebar for Admin -->
+                <!-- Sidebar for Admin -->
             @elseif (Auth::user()->role == 'admin')
                 <div class="sb-sidenav-menu-heading">Admin Menu</div>
                 <a class="nav-link" href="{{ route('admin.upload-announcement') }}">
                     <div class="sb-nav-link-icon"><i class="fas fa-bullhorn"></i></div>
                     <span class="nav-text">Upload Announcement</span>
                 </a>
-                <a class="nav-link" href="#" id="registerDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <a class="nav-link" href="#" id="registerDropdown" data-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false">
                     <div class="sb-nav-link-icon"><i class="fas fa-plus-circle"></i></div>
                     <span class="nav-text">REGISTER</span>
                 </a>
@@ -91,14 +117,14 @@
                         <span class="nav-text">Register Exam</span>
                     </a>
                 </div>
-                    <a class="nav-link" href="{{ route('admin.promote') }}">
-                     <div class="sb-nav-link-icon"><i class="fas fa-user-graduate"></i></div>
-                        <span class="nav-text">Promote</span>
-                    </a>
-                    <a class="nav-link" href="{{ route('admin.assignClassTeacher') }}">
-                        <div class="sb-nav-link-icon"><i class="fas fa-user-plus"></i></div>
-                        <span class="nav-text">Assign Class Teacher</span>
-                    </a>
+                <a class="nav-link" href="{{ route('admin.promote') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-user-graduate"></i></div>
+                    <span class="nav-text">Promote</span>
+                </a>
+                <a class="nav-link" href="{{ route('admin.assignClassTeacher') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-user-plus"></i></div>
+                    <span class="nav-text">Assign Class Teacher</span>
+                </a>
 
 
                 <a class="nav-link" href="{{ route('admin.change-password') }}">
@@ -107,27 +133,27 @@
                 </a>
                 <!-- Sidebar for Bursar -->
             @elseif (Auth::user()->role == 'bursar')
-            <div class="sb-sidenav-menu-heading">Bursar Menu</div>
-            <a class="nav-link" href="{{ route('bursar.fee-structure-management') }}">
-                <div class="sb-nav-link-icon"><i class="fas fa-money-bill-alt"></i></div>
-                <span class="nav-text">Fee Structure Management</span>
-            </a>
-            <a class="nav-link" href="{{ route('bursar.view-and-manage-payments') }}">
-                <div class="sb-nav-link-icon"><i class="fas fa-wallet"></i></div>
-                <span class="nav-text">View and Manage Payments</span>
-            </a>
-            <a class="nav-link" href="{{ route('bursar.generateInvoice') }}">
-                <div class="sb-nav-link-icon"><i class="fas fa-receipt"></i></div>
-                <span class="nav-text">Generate Invoice</span>
-            </a>
-            <a class="nav-link" href="{{ route('bursar.financialReport') }}">
-                <div class="sb-nav-link-icon"><i class="fas fa-chart-line"></i></div>
-                <span class="nav-text">Financial Report</span>
-            </a>
-            <a class="nav-link" href="{{ route('bursar.changePassword') }}">
-                <div class="sb-nav-link-icon"><i class="fas fa-key"></i></div>
-                <span class="nav-text">Change Password</span>
-            </a>
+                <div class="sb-sidenav-menu-heading">Bursar Menu</div>
+                <a class="nav-link" href="{{ route('bursar.fee-structure-management') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-money-bill-alt"></i></div>
+                    <span class="nav-text">Fee Structure Management</span>
+                </a>
+                <a class="nav-link" href="{{ route('bursar.view-and-manage-payments') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-wallet"></i></div>
+                    <span class="nav-text">View and Manage Payments</span>
+                </a>
+                <a class="nav-link" href="{{ route('bursar.generateInvoice') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-receipt"></i></div>
+                    <span class="nav-text">Generate Invoice</span>
+                </a>
+                <a class="nav-link" href="{{ route('bursar.financialReport') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-chart-line"></i></div>
+                    <span class="nav-text">Financial Report</span>
+                </a>
+                <a class="nav-link" href="{{ route('bursar.changePassword') }}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-key"></i></div>
+                    <span class="nav-text">Change Password</span>
+                </a>
             @endif
         </div>
 

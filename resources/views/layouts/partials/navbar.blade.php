@@ -1,8 +1,13 @@
 <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
     <!-- Navbar Brand-->
-    <a class="navbar-brand ps-3" href="{{ route('home.' . auth()->user()->role) }}" style="font-size: 1.5rem; letter-spacing: 8px;">SIMS</a>
+    <a class="navbar-brand ps-3"
+        href="{{ session()->has('selected_student_id') ? route('home.student') : route('home.' . auth()->user()->role) }}"
+        style="font-size: 1.5rem; letter-spacing: 8px;">
+        SIMS
+    </a>
     <!-- Sidebar Toggle-->
-    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
+            class="fas fa-bars"></i></button>
     <!-- Navbar Search-->
     <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
         {{-- <div class="input-group">
@@ -21,7 +26,8 @@
         <li class="nav-item">
             <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: inline;">
                 @csrf
-                <button type="submit" class="nav-link" style="background: none; border: none; padding: 0; cursor: pointer;">
+                <button type="submit" class="nav-link"
+                    style="background: none; border: none; padding: 0; cursor: pointer;">
                     <i class="fas fa-power-off" style="margin-right: 8px;"></i> Logout
                 </button>
             </form>

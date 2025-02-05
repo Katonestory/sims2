@@ -237,9 +237,6 @@ class AdminController extends Controller
 
                 // Handle parent registration if provided.
                 if ($request->has('parent_first_name') && is_array($request->parent_first_name)) {
-
-
-                    // Optionally, you may add further validation for parent inputs.
                     $parentFirstNames = $request->input('parent_first_name');
                     $parentSurnames   = $request->input('parent_surname');
                     $parentEmails     = $request->input('parent_email');
@@ -247,34 +244,49 @@ class AdminController extends Controller
 
                     // Loop over each provided parent.
                     for ($i = 0; $i < count($parentFirstNames); $i++) {
-                        // Prepare the parent's data.
                         $pFirstName = $parentFirstNames[$i];
                         $pSurname   = $parentSurnames[$i];
                         $pEmail     = $parentEmails[$i];
                         $pPhone     = $parentPhones[$i];
 
-                        // Create a user record for the parent.
-                        $parentUser = User::create([
-                            'name'     => $pFirstName . ' ' . $pSurname,
-                            'email'    => $pEmail,
-                            'password' => bcrypt(strtoupper($pSurname)),
-                            'role'     => 4,
-                        ]);
+                        // Check if the parent already exists.
+                        $existingUser = User::where('email', $pEmail)->first();
 
-                        // Create the parent record.
-                        // Note: Here the 'user_id' field references the id in the users table.
-                        $parentRecord = ParentModel::create([
-                            'user_id'      => $parentUser->id,
-                            'phone_number' => $pPhone,
-                        ]);
+                        if ($existingUser) {
+                            // Parent already exists, retrieve the parent record.
+                            $parentRecord = ParentModel::where('user_id', $existingUser->id)->first();
+
+                            if (!$parentRecord) {
+                                // Handle the edge case where the User exists but not the ParentModel.
+                                $parentRecord = ParentModel::create([
+                                    'user_id'      => $existingUser->id,
+                                    'phone_number' => $pPhone,
+                                ]);
+                            }
+                        } else {
+                            // Parent does not exist, create new User and ParentModel.
+                            $parentUser = User::create([
+                                'name'     => $pFirstName . ' ' . $pSurname,
+                                'email'    => $pEmail,
+                                'password' => bcrypt(strtoupper($pSurname)),
+                                'role'     => 4,
+                            ]);
+
+                            $parentRecord = ParentModel::create([
+                                'user_id'      => $parentUser->id,
+                                'phone_number' => $pPhone,
+                            ]);
+                        }
 
                         // Create a pivot entry to relate this parent to the student.
-                        // Using the defined many-to-many relationship on the Parent model.
-                        $parentRecord->student()->attach($student->id);
+                        if (!$parentRecord->student()->where('parent_student.student_id', $student->id)->exists()) {
+                            $parentRecord->student()->attach($student->id);
+                        }
+
                     }
                 }
 
-                return redirect()->back()->with('success', 'Student and parent(s) registered successfully! The student and Parent  default password is their surname in uppercase.');
+                return redirect()->back()->with('success', 'Student and parent(s) registered successfully! The student and Parent default password is their surname in uppercase.');
             } catch (\Exception $e) {
                 // Log the error for debugging.
                 \Log::error('Student Registration Error: ' . $e->getMessage());
@@ -283,6 +295,7 @@ class AdminController extends Controller
             }
         }
     }
+
 
 
     public function showRegisterSubjectsForm()

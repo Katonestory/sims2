@@ -150,7 +150,8 @@ Route::group(['middleware' => 'prevent-back'],function(){
       Route::middleware(['auth','user-role:parent'])->group(function(){
 
         Route::get("/parent/home",[HomeController::class, 'parentHome'])->name('home.parent');
-    });
+        Route::post('/parent/select-student', [HomeController::class, 'selectStudent'])->name('parent.selectStudent');
+     });
 });
 
 ?>
