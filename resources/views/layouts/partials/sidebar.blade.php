@@ -31,7 +31,7 @@
                     <div class="sb-nav-link-icon"><i class="fas fa-chart-bar"></i></div>
                     <span class="nav-text">Results</span>
                 </a>
-                <a class="nav-link" href="{{ route('student.change-password') }}">
+                <a class="nav-link" href="{{ route('parent.change-password') }}">
                     <div class="sb-nav-link-icon"><i class="fas fa-key"></i></div>
                     <span class="nav-text">Change Password</span>
                 </a>

@@ -151,6 +151,10 @@ Route::group(['middleware' => 'prevent-back'],function(){
 
         Route::get("/parent/home",[HomeController::class, 'parentHome'])->name('home.parent');
         Route::post('/parent/select-student', [HomeController::class, 'selectStudent'])->name('parent.selectStudent');
+
+        Route::get('/parent/change-password', [HomeController::class, 'showChangePasswordForm'])->name('parent.change-password');
+        Route::post('/parent/change-password', [HomeController::class, 'updatePassword'])->name('parent.update-password');
+
      });
 });
 

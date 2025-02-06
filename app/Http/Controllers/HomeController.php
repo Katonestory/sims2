@@ -141,6 +141,31 @@ class HomeController extends Controller
 
     }
 
+    public function showChangePasswordForm()
+    {
+        return view('parent.change-password');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:8|confirmed',
+        ]);
+
+        $user = Auth::user();
+
+        // Check if the current password matches
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'The current password is incorrect.']);
+        }
+
+        // Update the password
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return redirect()->route('parent.change-password')->with('success', 'Password successfully updated!');
+    }
 
     public function selectStudent(Request $request)
     {
