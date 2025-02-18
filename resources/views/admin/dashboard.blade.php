@@ -152,9 +152,9 @@
                 </tbody>
             </table>
             <!-- Pagination links for teachers -->
-            @if ($teachers instanceof \Illuminate\Pagination\LengthAwarePaginator)
-                {{ $teachers->links() }}
-            @endif
+            <br>
+            {{ $teachers->links() }}
+            </br>
         </div>
     @endisset
 
@@ -198,7 +198,10 @@
                     @endforeach
                 </tbody>
             </table>
+            <br>
             {{ $students->links() }}
+            </br>
+
         </div>
     @endisset
     <script>

@@ -75,43 +75,43 @@ class HomeController extends Controller
 
     public function adminHome()
     {
-    $announcements = Announcement::where('endDate', '>=', now())->latest()->get();
+        $announcements = Announcement::where('endDate', '>=', now())->latest()->get();
 
-    // Fetch data for each component
-    $departments = Department::all();
-    $departmentCount = $departments->count();
+        // Fetch data for each component
+        $departments = Department::all();
+        $departmentCount = $departments->count();
 
-    $classes = Classes::with(['streams.teacher'])->get();
-    $classCount = $classes->count();
+        $classes = Classes::with(['streams.teacher'])->get();
+        $classCount = $classes->count();
 
-    $subjects = Subject::all();
-    $subjectCount = $subjects->count();
+        $subjects = Subject::all();
+        $subjectCount = $subjects->count();
 
-    $exams = Exam::all();
-    $examCount = $exams->count();
+        $exams = Exam::all();
+        $examCount = $exams->count();
 
-    $teachers = Teacher::paginate(10); // Add pagination for teachers
-    $teacherCount = Teacher::count();
+        $teachers = Teacher::paginate(10, ['*'], 'teacher_page');
+        $teacherCount = Teacher::count();
 
-    $students = Student::paginate(10); // Add pagination for students
-    $studentCount = Student::count();
+        $students = Student::paginate(10, ['*'], 'student_page');
+        $studentCount = Student::count();
 
-    // Pass all data to the view
-    return view('admin.dashboard', compact(
-        'announcements',
-        'departments',
-        'departmentCount',
-        'classes',
-        'classCount',
-        'subjects',
-        'subjectCount',
-        'exams',
-        'examCount',
-        'teachers',
-        'teacherCount',
-        'students',
-        'studentCount'
-    ));
+        // Pass all data to the view
+        return view('admin.dashboard', compact(
+            'announcements',
+            'departments',
+            'departmentCount',
+            'classes',
+            'classCount',
+            'subjects',
+            'subjectCount',
+            'exams',
+            'examCount',
+            'teachers',
+            'teacherCount',
+            'students',
+            'studentCount'
+        ));
     }
 
     public function bursarHome()
